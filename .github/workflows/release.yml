@@ -1,0 +1,103 @@
+name: release
+
+# Stable release flow. Triggered when commits land on main (typically from a
+# release/* PR that bumped the VERSION file). Reads VERSION as the source of
+# truth, tags v<VERSION>, and runs the release tool to publish to all
+# configured channels.
+#
+# Idempotent: if the tag already exists (i.e. main was pushed without a
+# VERSION bump), the workflow exits cleanly without retagging or republishing.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  # packages: write    # uncomment if pushing container images
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false   # never cancel a release mid-flight
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # TODO: set up your language toolchain.
+
+      - name: Read VERSION
+        id: ver
+        run: |
+          set -euo pipefail
+          v=$(tr -d '[:space:]' < VERSION)
+          if [ -z "$v" ]; then
+            echo "VERSION file is empty" >&2
+            exit 1
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "tag=v$v"    >> "$GITHUB_OUTPUT"
+
+      - name: Idempotence guard
+        id: guard
+        run: |
+          set -euo pipefail
+          git fetch --tags --quiet
+          if git rev-parse "${{ steps.ver.outputs.tag }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.ver.outputs.tag }} already exists; skipping release."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Push tag
+        if: steps.guard.outputs.exists == 'false'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "${{ steps.ver.outputs.tag }}"
+          git push origin "${{ steps.ver.outputs.tag }}"
+
+      # TODO: run your release tool. Examples below — uncomment one and
+      # delete the others. Always pass cross-repo publish tokens (taps,
+      # buckets, fork forks) explicitly via env.
+      #
+      # ─── Go (goreleaser) ─────────────────────────────────────────────
+      # - uses: docker/setup-qemu-action@v3
+      # - uses: docker/setup-buildx-action@v3
+      # - uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
+      # - if: steps.guard.outputs.exists == 'false'
+      #   uses: goreleaser/goreleaser-action@v6
+      #   with: { version: "~> v2", args: release --clean }
+      #   env:
+      #     GITHUB_TOKEN:              ${{ secrets.GITHUB_TOKEN }}
+      #     HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+      #     SCOOP_GITHUB_TOKEN:        ${{ secrets.SCOOP_GITHUB_TOKEN }}
+      #
+      # ─── Node / npm ──────────────────────────────────────────────────
+      # - if: steps.guard.outputs.exists == 'false'
+      #   run: |
+      #     npm ci
+      #     npm run build
+      #     npm publish --provenance --access public
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #
+      # ─── Python / PyPI ───────────────────────────────────────────────
+      # - if: steps.guard.outputs.exists == 'false'
+      #   run: pipx run build && pipx run twine upload dist/*
+      #   env:
+      #     TWINE_USERNAME: __token__
+      #     TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      #
+      # ─── Rust / cargo ────────────────────────────────────────────────
+      # - if: steps.guard.outputs.exists == 'false'
+      #   run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}

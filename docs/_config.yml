@@ -1,0 +1,21 @@
+title: "{{PROJECT_NAME}}"
+description: "{{DESCRIPTION}}"
+theme: jekyll-theme-cayman
+url: "https://{{OWNER}}.github.io"
+baseurl: "/{{PROJECT_NAME}}"
+
+show_downloads: true
+github:
+  repository_url: "https://github.com/{{OWNER}}/{{PROJECT_NAME}}"
+
+plugins:
+  - jekyll-relative-links
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+relative_links:
+  enabled: true
+  collections: true
+
+include:
+  - CHANGELOG.md
