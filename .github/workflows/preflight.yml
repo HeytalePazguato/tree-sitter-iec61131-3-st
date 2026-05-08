@@ -8,6 +8,12 @@ name: preflight
 
 on:
   workflow_dispatch:
+  # Auto-runs whenever the preflight workflow itself is updated on develop.
+  # workflow_dispatch above only becomes available after main has this file.
+  push:
+    branches: [develop]
+    paths:
+      - .github/workflows/preflight.yml
 
 permissions: {}
 
