@@ -65,8 +65,11 @@ jobs:
           #   - 400 = auth accepted, payload rejected (what we want)
           #   - 401 / 403 = auth rejected (token bad)
           # The empty body never produces a real publish.
+          # crates.io's data-access policy requires a User-Agent that
+          # identifies the caller; the default curl UA gets 403.
           status=$(curl -sS -o /tmp/body -w "%{http_code}" \
             -X PUT \
+            -A "tree-sitter-iec61131-3-st preflight (https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st)" \
             -H "Authorization: ${CARGO_REGISTRY_TOKEN}" \
             -H "Content-Type: application/octet-stream" \
             --data-binary "" \
