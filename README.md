@@ -1,6 +1,9 @@
 # tree-sitter-iec61131-3
 
 [![ci](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml/badge.svg)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml)
+[![license](https://img.shields.io/github/license/HeytalePazguato/tree-sitter-iec61131-3-st)](LICENSE)
+[![tree-sitter](https://img.shields.io/badge/tree--sitter-0.26%2B-7c3aed)](https://tree-sitter.github.io/tree-sitter/)
+[![IEC 61131-3](https://img.shields.io/badge/IEC%2061131--3-Structured%20Text-005f87)](https://en.wikipedia.org/wiki/IEC_61131-3)
 
 A [tree-sitter] grammar for [IEC 61131-3][iec61131] **Structured Text** (ST) — the standard programming language for industrial PLCs. Standard-compliant first; vendor dialects (Beckhoff TwinCAT, Codesys, B&R Automation Studio, Siemens TIA, Rockwell) are deferred to separate dialect grammars that extend this base.
 

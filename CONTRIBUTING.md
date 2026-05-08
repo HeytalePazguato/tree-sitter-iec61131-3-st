@@ -1,7 +1,11 @@
-# Contributing to {{PROJECT_NAME}}
+# Contributing to tree-sitter-iec61131-3
 
 Thanks for your interest! Contributions of any size are welcome — bug
 reports, fixes, new features, doc improvements.
+
+For dialect-grammar contributions (TwinCAT, Codesys, B&R, Siemens,
+Rockwell), see [EXTENDING.md](EXTENDING.md) — those live in separate
+repos and extend this base.
 
 ## Branch flow
 
@@ -20,7 +24,10 @@ See the [README's "Branching & releases"](README.md) section (or
 ## Pull requests
 
 - One logical change per PR; keep diffs reviewable.
-- Run lint + build + test locally before opening the PR.
+- Run `tree-sitter generate` and commit the regenerated `src/parser.c`
+  along with any `grammar.js` change. CI verifies these stay in sync.
+- Run `tree-sitter test` (corpus tests) before opening the PR.
+- Make sure every file in `examples/` still parses without errors.
 - Update `CHANGELOG.md` under `[Unreleased]`.
 - Don't bump `VERSION` in feature PRs — that happens on the release branch.
 - The `ci` workflow must pass before a PR can merge.
@@ -47,7 +54,7 @@ A minimal reproducing example is gold.
 
 ## Asking questions / proposing ideas
 
-Use [Discussions](https://github.com/{{OWNER}}/{{PROJECT_NAME}}/discussions)
+Use [Discussions](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/discussions)
 for open-ended questions and ideas. Reserve issues for actionable bugs and
 concrete feature requests.
 
