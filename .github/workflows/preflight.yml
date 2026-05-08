@@ -47,7 +47,7 @@ jobs:
           fi
 
   cargo:
-    name: crates.io — /api/v1/me
+    name: crates.io — publish-endpoint auth probe
     runs-on: ubuntu-latest
     steps:
       - name: Verify CARGO_REGISTRY_TOKEN
@@ -59,16 +59,26 @@ jobs:
             echo "::error::CARGO_REGISTRY_TOKEN secret is not set"
             exit 1
           fi
+          # crates.io's /me endpoint requires user-info scope, which
+          # publish-scoped tokens (publish-new + publish-update) lack.
+          # Probe the publish endpoint with an empty body instead:
+          #   - 400 = auth accepted, payload rejected (what we want)
+          #   - 401 / 403 = auth rejected (token bad)
+          # The empty body never produces a real publish.
           status=$(curl -sS -o /tmp/body -w "%{http_code}" \
+            -X PUT \
             -H "Authorization: ${CARGO_REGISTRY_TOKEN}" \
-            https://crates.io/api/v1/me)
+            -H "Content-Type: application/octet-stream" \
+            --data-binary "" \
+            https://crates.io/api/v1/crates/new)
           echo "HTTP ${status}"
-          cat /tmp/body
+          head -c 500 /tmp/body
           echo
-          if [[ "${status}" != "200" ]]; then
-            echo "::error::crates.io /me returned HTTP ${status}"
-            exit 1
-          fi
+          case "${status}" in
+            400|422)     echo "OK: auth accepted (payload rejected as expected)" ;;
+            401|403)     echo "::error::crates.io auth rejected (HTTP ${status})"; exit 1 ;;
+            *)           echo "::error::Unexpected HTTP ${status}"; exit 1 ;;
+          esac
 
   pypi:
     name: PyPI — upload-endpoint auth probe
