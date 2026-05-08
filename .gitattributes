@@ -36,3 +36,7 @@ VERSION     text eol=lf
 # package-lock.json  linguist-generated=true
 # pnpm-lock.yaml     linguist-generated=true
 # Cargo.lock         linguist-generated=true
+
+# Zig bindings
+build.zig linguist-generated
+build.zig.zon linguist-generated
