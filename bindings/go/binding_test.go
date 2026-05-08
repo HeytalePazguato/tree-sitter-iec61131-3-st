@@ -1,15 +1,15 @@
-package tree_sitter_iec61131_test
+package tree_sitter_iec61131_3_test
 
 import (
 	"testing"
 
 	tree_sitter "github.com/tree-sitter/go-tree-sitter"
-	tree_sitter_iec61131 "github.com/heytalepazguato/tree-sitter-iec61131-st/bindings/go"
+	tree_sitter_iec61131_3 "github.com/heytalepazguato/tree-sitter-iec61131-3-st/bindings/go"
 )
 
 func TestCanLoadGrammar(t *testing.T) {
-	language := tree_sitter.NewLanguage(tree_sitter_iec61131.Language())
+	language := tree_sitter.NewLanguage(tree_sitter_iec61131_3.Language())
 	if language == nil {
-		t.Errorf("Error loading Iec61131 grammar")
+		t.Errorf("Error loading Iec611313 grammar")
 	}
 }

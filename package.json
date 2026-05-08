@@ -1,11 +1,11 @@
 {
-  "name": "tree-sitter-iec61131",
+  "name": "tree-sitter-iec61131-3",
   "version": "0.0.1",
   "description": "IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/heytalepazguato/tree-sitter-iec61131-st.git"
+    "url": "git+https://github.com/heytalepazguato/tree-sitter-iec61131-3-st.git"
   },
   "license": "MIT",
   "author": {
@@ -18,7 +18,7 @@
     "incremental",
     "parsing",
     "tree-sitter",
-    "iec61131"
+    "iec61131_3"
   ],
   "files": [
     "grammar.js",

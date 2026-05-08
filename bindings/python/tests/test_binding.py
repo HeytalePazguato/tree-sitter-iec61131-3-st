@@ -1,12 +1,12 @@
 from unittest import TestCase
 
 from tree_sitter import Language, Parser
-import tree_sitter_iec61131
+import tree_sitter_iec61131_3
 
 
 class TestLanguage(TestCase):
     def test_can_load_grammar(self):
         try:
-            Parser(Language(tree_sitter_iec61131.language()))
+            Parser(Language(tree_sitter_iec61131_3.language()))
         except Exception:
-            self.fail("Error loading Iec61131 grammar")
+            self.fail("Error loading Iec611313 grammar")

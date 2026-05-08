@@ -1,6 +1,6 @@
 # Extending the grammar
 
-`tree-sitter-iec61131` is the **standard** IEC 61131-3 Structured Text grammar. Vendor dialects (Beckhoff TwinCAT, Codesys, B&R Automation Studio, Siemens, Rockwell, …) live in **separate** dialect grammars that import this one and add their vendor-specific constructs through tree-sitter's grammar-extension mechanism.
+`tree-sitter-iec61131-3` is the **standard** IEC 61131-3 Structured Text grammar. Vendor dialects (Beckhoff TwinCAT, Codesys, B&R Automation Studio, Siemens, Rockwell, …) live in **separate** dialect grammars that import this one and add their vendor-specific constructs through tree-sitter's grammar-extension mechanism.
 
 This document describes:
 
@@ -13,17 +13,17 @@ This document describes:
 
 ## 1. Naming convention
 
-Every dialect repo is named `tree-sitter-iec61131-<vendor>`:
+Every dialect repo is named `tree-sitter-iec61131-3-<vendor>` (note the `-3-` carries through — Part 3 of IEC 61131 covers the programming languages):
 
-| Vendor                      | Repo name                       | npm/crate name              |
-|-----------------------------|---------------------------------|-----------------------------|
-| Beckhoff TwinCAT            | `tree-sitter-iec61131-twincat`  | `tree-sitter-iec61131-twincat`  |
-| Codesys                     | `tree-sitter-iec61131-codesys`  | `tree-sitter-iec61131-codesys`  |
-| B&R Automation Studio       | `tree-sitter-iec61131-br`       | `tree-sitter-iec61131-br`       |
-| Siemens TIA Portal SCL      | `tree-sitter-iec61131-siemens`  | `tree-sitter-iec61131-siemens`  |
-| Rockwell Studio 5000 ST     | `tree-sitter-iec61131-rockwell` | `tree-sitter-iec61131-rockwell` |
+| Vendor                      | Repo name                          | npm/crate name                   |
+|-----------------------------|------------------------------------|----------------------------------|
+| Beckhoff TwinCAT            | `tree-sitter-iec61131-3-twincat`   | `tree-sitter-iec61131-3-twincat` |
+| Codesys                     | `tree-sitter-iec61131-3-codesys`   | `tree-sitter-iec61131-3-codesys` |
+| B&R Automation Studio       | `tree-sitter-iec61131-3-br`        | `tree-sitter-iec61131-3-br`      |
+| Siemens TIA Portal SCL      | `tree-sitter-iec61131-3-siemens`   | `tree-sitter-iec61131-3-siemens` |
+| Rockwell Studio 5000 ST     | `tree-sitter-iec61131-3-rockwell`  | `tree-sitter-iec61131-3-rockwell`|
 
-The grammar's internal `name` field is `iec61131_<vendor>` (snake_case), so the C function the parser exports is `tree_sitter_iec61131_twincat`, etc. The grammar `scope` should be `source.iec61131.<vendor>` so editors can match files to the right grammar by file extension or shebang.
+The grammar's internal `name` field is `iec61131_3_<vendor>` (snake_case — tree-sitter generates `tree_sitter_<name>` as the C function symbol, so hyphens become underscores). The grammar `scope` is `source.iec61131-3.<vendor>` so editors can match files to the right grammar by file extension or shebang.
 
 ---
 
@@ -46,6 +46,8 @@ The base grammar also exposes these as **supertypes** so editor queries can matc
 
 A dialect grammar overrides any of these hidden rules to inject vendor-specific alternatives, while delegating to `original` for everything the standard already covers.
 
+The base grammar also exports a `kw(name)` helper for building case-insensitive keyword tokens — dialects can `import { kw } from 'tree-sitter-iec61131-3/grammar'` to reuse the same keyword-token machinery.
+
 ---
 
 ## 3. Worked example: adding a TwinCAT-only keyword
@@ -55,19 +57,19 @@ TwinCAT exposes a `__SYSTEM` namespace for runtime intrinsics. The call `__SYSTE
 ### Setup
 
 ```sh
-mkdir tree-sitter-iec61131-twincat
-cd tree-sitter-iec61131-twincat
+mkdir tree-sitter-iec61131-3-twincat
+cd tree-sitter-iec61131-3-twincat
 npm init -y
-npm install tree-sitter-iec61131
+npm install tree-sitter-iec61131-3
 ```
 
 ### `grammar.js`
 
 ```js
-const base = require('tree-sitter-iec61131/grammar');
+import base, { kw } from 'tree-sitter-iec61131-3/grammar';
 
-module.exports = grammar(base, {
-  name: 'iec61131_twincat',
+export default grammar(base, {
+  name: 'iec61131_3_twincat',
 
   rules: {
     // Add `twincat_system_call` as a new alternative to `_expression`.
@@ -93,9 +95,9 @@ module.exports = grammar(base, {
 {
   "grammars": [
     {
-      "name": "iec61131_twincat",
-      "camelcase": "Iec61131Twincat",
-      "scope": "source.iec61131.twincat",
+      "name": "iec61131_3_twincat",
+      "camelcase": "Iec61131_3_Twincat",
+      "scope": "source.iec61131-3.twincat",
       "path": ".",
       "file-types": ["TcPOU", "TcDUT", "TcGVL", "twincat.st"],
       "highlights": ["queries/highlights.scm"],
@@ -133,7 +135,25 @@ You should see a `twincat_system_call` node inside the assignment's right-hand s
 
 ### Adding a reserved word
 
-If your vendor extension requires a new reserved word that must lex as a keyword (not as an identifier), extend the base's reserved list when the underlying tree-sitter version supports the `reserved` directive. Until then, the dialect can declare its keywords inline using the same `kw(name)` helper pattern this base grammar uses (see `grammar.js` line ~34) — token-level `prec(2, …)` ensures the keyword wins ties against the identifier rule via maximal-munch matching.
+If your vendor extension requires a new reserved word that must lex as a keyword (not as an identifier), use the `kw(name)` helper exported by the base grammar:
+
+```js
+import base, { kw } from 'tree-sitter-iec61131-3/grammar';
+
+export default grammar(base, {
+  // ...
+  rules: {
+    short_circuit_expression: $ =>
+      prec.left(3, seq(
+        field('left', $._expression),
+        field('operator', kw('AND_THEN')),     // <-- case-insensitive keyword
+        field('right', $._expression),
+      )),
+  },
+});
+```
+
+The helper builds a case-insensitive regex token at high precedence so it wins maximal-munch ties against the identifier rule.
 
 ---
 
@@ -143,12 +163,14 @@ A minimal end-to-end stub is checked in at:
 
 ```
 examples/dialect-extension/
-├── grammar.js          # Adds one TwinCAT-only construct
+├── grammar.js          # Adds two TwinCAT-flavored constructs
+├── tree-sitter.json    # Dialect-grammar metadata
+├── package.json        # Local scaffolding (private, not published)
 ├── README.md           # How to build and parse a sample file
 └── sample.st           # Test input that exercises the extension
 ```
 
-Copy that directory to a new repo, run `npm install tree-sitter-iec61131` (or point at this checkout via `npm link`), then `tree-sitter generate && tree-sitter parse sample.st`. If the parse succeeds and the tree contains a `twincat_system_call` node, the extension architecture is wired up correctly in your environment.
+Copy that directory to a new repo, run `npm install tree-sitter-iec61131-3` (or point at this checkout via `npm link`), then `tree-sitter generate && tree-sitter parse sample.st`. If the parse succeeds and the tree contains a `twincat_system_call` node and a `short_circuit_expression` node, the extension architecture is wired up correctly in your environment.
 
 ---
 

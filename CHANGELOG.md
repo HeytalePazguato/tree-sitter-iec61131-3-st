@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] — next: 0.0.1
 
+### Changed
+
+- Renamed the project from `tree-sitter-iec61131` to `tree-sitter-iec61131-3`
+  (and the repo to `tree-sitter-iec61131-3-st`) so the name encodes the
+  IEC 61131 part number. Part 3 of IEC 61131 is the one that defines the
+  PLC programming languages including ST. The `-3-` carries through to all
+  future dialect repos (e.g. `tree-sitter-iec61131-3-twincat`). Internal
+  grammar name is now `iec61131_3`; C function symbol is
+  `tree_sitter_iec61131_3`. No published artifacts existed under the old
+  name, so this is purely a pre-release rename.
+
 ### Added
 
 - Initial tree-sitter grammar for IEC 61131-3 (3rd edition, 2013) Structured

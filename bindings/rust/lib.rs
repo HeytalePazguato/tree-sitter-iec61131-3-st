@@ -1,4 +1,4 @@
-//! This crate provides Iec61131 language support for the [tree-sitter] parsing library.
+//! This crate provides Iec611313 language support for the [tree-sitter] parsing library.
 //!
 //! Typically, you will use the [`LANGUAGE`] constant to add this language to a
 //! tree-sitter [`Parser`], and then use the parser to parse some code:
@@ -7,10 +7,10 @@
 //! let code = r#"
 //! "#;
 //! let mut parser = tree_sitter::Parser::new();
-//! let language = tree_sitter_iec61131::LANGUAGE;
+//! let language = tree_sitter_iec61131_3::LANGUAGE;
 //! parser
 //!     .set_language(&language.into())
-//!     .expect("Error loading Iec61131 parser");
+//!     .expect("Error loading Iec611313 parser");
 //! let tree = parser.parse(code, None).unwrap();
 //! assert!(!tree.root_node().has_error());
 //! ```
@@ -21,11 +21,11 @@
 use tree_sitter_language::LanguageFn;
 
 extern "C" {
-    fn tree_sitter_iec61131() -> *const ();
+    fn tree_sitter_iec61131_3() -> *const ();
 }
 
 /// The tree-sitter [`LanguageFn`] for this grammar.
-pub const LANGUAGE: LanguageFn = unsafe { LanguageFn::from_raw(tree_sitter_iec61131) };
+pub const LANGUAGE: LanguageFn = unsafe { LanguageFn::from_raw(tree_sitter_iec61131_3) };
 
 /// The content of the [`node-types.json`] file for this grammar.
 ///
@@ -55,6 +55,6 @@ mod tests {
         let mut parser = tree_sitter::Parser::new();
         parser
             .set_language(&super::LANGUAGE.into())
-            .expect("Error loading Iec61131 parser");
+            .expect("Error loading Iec611313 parser");
     }
 }

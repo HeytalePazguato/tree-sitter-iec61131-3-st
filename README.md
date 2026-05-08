@@ -1,8 +1,10 @@
-# tree-sitter-iec61131
+# tree-sitter-iec61131-3
 
-[![ci](https://github.com/HeytalePazguato/tree-sitter-iec61131-st/actions/workflows/ci.yml/badge.svg)](https://github.com/HeytalePazguato/tree-sitter-iec61131-st/actions/workflows/ci.yml)
+[![ci](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml/badge.svg)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml)
 
 A [tree-sitter] grammar for [IEC 61131-3][iec61131] **Structured Text** (ST) — the standard programming language for industrial PLCs. Standard-compliant first; vendor dialects (Beckhoff TwinCAT, Codesys, B&R Automation Studio, Siemens TIA, Rockwell) are deferred to separate dialect grammars that extend this base.
+
+> **About the name** — IEC 61131 is the umbrella PLC-programming standard. **Part 3** (`IEC 61131-3`) defines the programming languages: ST (Structured Text), LD (Ladder Diagram), FBD (Function Block Diagram), IL (Instruction List, deprecated), and SFC (Sequential Function Chart). This repo covers ST only — the `-3-st` suffix encodes both: Part 3 of the standard, ST language specifically.
 
 ## Features
 
@@ -54,7 +56,7 @@ Parsing this with `tree-sitter parse` produces a clean tree with
 ### Node
 
 ```sh
-npm install tree-sitter tree-sitter-iec61131
+npm install tree-sitter tree-sitter-iec61131-3
 ```
 
 ### Rust
@@ -63,18 +65,18 @@ npm install tree-sitter tree-sitter-iec61131
 # Cargo.toml
 [dependencies]
 tree-sitter = "0.25"
-tree-sitter-iec61131 = "0.0"
+tree-sitter-iec61131-3 = "0.0"
 ```
 
 ### Python
 
 ```sh
-pip install tree-sitter tree-sitter-iec61131
+pip install tree-sitter tree-sitter-iec61131-3
 ```
 
 ```python
-import tree_sitter, tree_sitter_iec61131
-language = tree_sitter.Language(tree_sitter_iec61131.language())
+import tree_sitter, tree_sitter_iec61131_3
+language = tree_sitter.Language(tree_sitter_iec61131_3.language())
 parser = tree_sitter.Parser(language)
 tree = parser.parse(b"PROGRAM Hello END_PROGRAM")
 ```
@@ -84,7 +86,7 @@ tree = parser.parse(b"PROGRAM Hello END_PROGRAM")
 ```go
 import (
     sitter "github.com/tree-sitter/go-tree-sitter"
-    iec61131 "github.com/HeytalePazguato/tree-sitter-iec61131-st/bindings/go"
+    iec61131_3 "github.com/HeytalePazguato/tree-sitter-iec61131-3-st/bindings/go"
 )
 ```
 
@@ -94,7 +96,7 @@ import (
 
 ```lua
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { 'iec61131' },   -- once published; pre-publish, install from local path
+  ensure_installed = { 'iec61131_3' },   -- once published; pre-publish, install from local path
   highlight = { enable = true },
   indent    = { enable = true },
   fold      = { enable = true },
@@ -105,9 +107,9 @@ For a local development install before the parser is on the npm/CDN registry, ad
 
 ```lua
 local parser_config = require'nvim-treesitter.parsers'.get_parser_configs()
-parser_config.iec61131 = {
+parser_config.iec61131_3 = {
   install_info = {
-    url = 'https://github.com/HeytalePazguato/tree-sitter-iec61131-st',
+    url = 'https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st',
     files = { 'src/parser.c' },
     branch = 'main',
   },
@@ -121,16 +123,16 @@ parser_config.iec61131 = {
 
 ```toml
 [[language]]
-name = "iec61131"
-scope = "source.iec61131"
+name = "iec61131-3"
+scope = "source.iec61131-3"
 file-types = ["st", "iecst"]
 roots = []
 comment-token = "//"
 indent = { tab-width = 4, unit = "    " }
 
 [[grammar]]
-name = "iec61131"
-source = { git = "https://github.com/HeytalePazguato/tree-sitter-iec61131-st", rev = "main" }
+name = "iec61131_3"
+source = { git = "https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st", rev = "main" }
 ```
 
 ### Zed
@@ -155,7 +157,7 @@ Implemented in v0.0.x:
 
 Out of scope for v0.0.x:
 - Vendor dialect extensions (TwinCAT `__VERSION`, Codesys structured pragmas, B&R `ACTION`, etc.) — those will live in dialect repos that extend this grammar.
-- Other 61131-3 languages — Ladder Diagram, Function Block Diagram, Instruction List, Sequential Function Chart.
+- Other IEC 61131-3 languages — Ladder Diagram, Function Block Diagram, Instruction List, Sequential Function Chart.
 - Type checking, symbol resolution, code generation, formatting — this is a parser, not a compiler.
 
 ## Performance
@@ -189,15 +191,15 @@ conventions: `develop → release/<version> → main`, semver from a single
 
 Future repos that will extend this base grammar:
 
-- `tree-sitter-iec61131-twincat` — Beckhoff TwinCAT 3 (TwinCAT-specific
+- `tree-sitter-iec61131-3-twincat` — Beckhoff TwinCAT 3 (TwinCAT-specific
   pragmas, `S=` / `R=` set/reset, `OR_ELSE` / `AND_THEN` short-circuit
   operators, conditional compilation, `ACTION` blocks).
-- `tree-sitter-iec61131-codesys` — Codesys 3 (attribute pragmas with
+- `tree-sitter-iec61131-3-codesys` — Codesys 3 (attribute pragmas with
   structured contents, action / transition blocks).
-- `tree-sitter-iec61131-br` — B&R Automation Studio (`ACTION`,
+- `tree-sitter-iec61131-3-br` — B&R Automation Studio (`ACTION`,
   task-specific extensions).
-- `tree-sitter-iec61131-siemens` — Siemens TIA Portal SCL.
-- `tree-sitter-iec61131-rockwell` — Rockwell Studio 5000 ST.
+- `tree-sitter-iec61131-3-siemens` — Siemens TIA Portal SCL.
+- `tree-sitter-iec61131-3-rockwell` — Rockwell Studio 5000 ST.
 
 Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and
 [EXTENDING.md](EXTENDING.md).

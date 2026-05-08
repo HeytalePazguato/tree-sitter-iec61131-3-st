@@ -91,7 +91,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.ver.outputs.tag }}
-          name: tree-sitter-iec61131 ${{ steps.ver.outputs.version }}
+          name: tree-sitter-iec61131-3 ${{ steps.ver.outputs.version }}
           generate_release_notes: true
           files: |
             src/parser.c

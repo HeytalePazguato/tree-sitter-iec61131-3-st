@@ -1,5 +1,5 @@
 /**
- * @file Worked dialect-extension example for tree-sitter-iec61131.
+ * @file Worked dialect-extension example for tree-sitter-iec61131-3.
  * @license MIT
  *
  * This is a *minimal* TwinCAT-flavored dialect that adds two constructs
@@ -14,7 +14,7 @@
  *      `OR`.
  *
  * The point of this example is to demonstrate the EXTENSION MECHANISM, not
- * to be a complete TwinCAT grammar. A real `tree-sitter-iec61131-twincat`
+ * to be a complete TwinCAT grammar. A real `tree-sitter-iec61131-3-twincat`
  * repo would live in its own GitHub repository and add ~30+ more
  * constructs (S=, R=, REF=, attribute pragmas with structured contents,
  * conditional compilation, ACTION blocks, …).
@@ -22,18 +22,18 @@
  * To run:
  *
  *   cd examples/dialect-extension
- *   npm link tree-sitter-iec61131            # or `npm install tree-sitter-iec61131` once published
+ *   npm link tree-sitter-iec61131-3          # or `npm install tree-sitter-iec61131-3` once published
  *   tree-sitter generate
  *   tree-sitter parse sample.st
  */
 
 // In a real dialect repo this would be:
-//   import base, { kw } from 'tree-sitter-iec61131/grammar';
+//   import base, { kw } from 'tree-sitter-iec61131-3/grammar';
 // Inside this examples/ folder, we resolve to the parent directory:
 import base, { kw } from '../../grammar.js';
 
 export default grammar(base, {
-  name: 'iec61131_twincat',
+  name: 'iec61131_3_twincat',
 
   // Extra conflicts created by the new alternatives in `_expression`.
   conflicts: ($, original) => [

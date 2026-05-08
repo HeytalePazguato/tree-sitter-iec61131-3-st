@@ -2,9 +2,9 @@
   "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
   "grammars": [
     {
-      "name": "iec61131_twincat",
-      "camelcase": "Iec61131Twincat",
-      "scope": "source.iec61131.twincat",
+      "name": "iec61131_3_twincat",
+      "camelcase": "Iec61131_3_Twincat",
+      "scope": "source.iec61131-3.twincat",
       "path": ".",
       "file-types": ["TcPOU", "TcDUT", "TcGVL", "twincat.st"]
     }

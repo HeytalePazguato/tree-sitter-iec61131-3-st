@@ -1,6 +1,6 @@
 {
   "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/grammar.schema.json",
-  "name": "iec61131",
+  "name": "iec61131_3",
   "word": "identifier",
   "rules": {
     "source_file": {
