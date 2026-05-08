@@ -14,6 +14,11 @@ name: release
 #   PYPI_API_TOKEN         → enables `twine upload`
 # Steps that lack their secret are skipped, so a partial registry rollout
 # (e.g. only npm at first) is supported without errors.
+#
+# A `preflight` job runs before `release` and exercises each token's
+# auth endpoint. If any *configured* token has been revoked or expired,
+# the release aborts before any publish, so we never end up with v0.0.1
+# half-released across registries.
 on:
   push:
     branches: [main]
@@ -26,7 +31,12 @@ concurrency:
   cancel-in-progress: false   # never cancel a release mid-flight
 
 jobs:
+  preflight:
+    uses: ./.github/workflows/preflight.yml
+    secrets: inherit
+
   release:
+    needs: preflight
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

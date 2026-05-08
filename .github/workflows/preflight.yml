@@ -1,15 +1,21 @@
 name: preflight
 
-# Manually-triggered sanity check that each registry token in the repo's
-# secrets is valid. No artifacts are uploaded; each job hits a low-cost
-# auth endpoint and fails loudly if the credentials don't authenticate.
+# Sanity check that each registry token in the repo's secrets is valid.
+# No artifacts are uploaded; each job hits a low-cost auth endpoint and
+# fails loudly if the credentials don't authenticate.
 #
-# Run before the first publish, and after rotating any token.
+# Triggered three ways:
+#   1. workflow_dispatch — manual ad-hoc run (after rotating a token).
+#   2. push to develop touching this file — covers the pre-default-branch
+#      case where workflow_dispatch isn't available yet.
+#   3. workflow_call — release.yml uses this as a gate before publishing.
+#
+# Tokens that aren't set are reported as warnings and skipped, not
+# errored, so partial-token configurations are tolerated.
 
 on:
   workflow_dispatch:
-  # Auto-runs whenever the preflight workflow itself is updated on develop.
-  # workflow_dispatch above only becomes available after main has this file.
+  workflow_call:
   push:
     branches: [develop]
     paths:
@@ -32,8 +38,8 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${NPM_TOKEN:-}" ]]; then
-            echo "::error::NPM_TOKEN secret is not set"
-            exit 1
+            echo "::warning::NPM_TOKEN secret is not set; skipping check"
+            exit 0
           fi
           status=$(curl -sS -o /tmp/body -w "%{http_code}" \
             -H "Authorization: Bearer ${NPM_TOKEN}" \
@@ -56,8 +62,8 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${CARGO_REGISTRY_TOKEN:-}" ]]; then
-            echo "::error::CARGO_REGISTRY_TOKEN secret is not set"
-            exit 1
+            echo "::warning::CARGO_REGISTRY_TOKEN secret is not set; skipping check"
+            exit 0
           fi
           # crates.io's /me endpoint requires user-info scope, which
           # publish-scoped tokens (publish-new + publish-update) lack.
@@ -93,8 +99,8 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${PYPI_API_TOKEN:-}" ]]; then
-            echo "::error::PYPI_API_TOKEN secret is not set"
-            exit 1
+            echo "::warning::PYPI_API_TOKEN secret is not set; skipping check"
+            exit 0
           fi
           # PyPI has no whoami endpoint. We POST an intentionally-empty
           # form to the upload endpoint:
