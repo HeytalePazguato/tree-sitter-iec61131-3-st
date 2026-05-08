@@ -1,0 +1,96 @@
+name: preflight
+
+# Manually-triggered sanity check that each registry token in the repo's
+# secrets is valid. No artifacts are uploaded; each job hits a low-cost
+# auth endpoint and fails loudly if the credentials don't authenticate.
+#
+# Run before the first publish, and after rotating any token.
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: preflight-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  npm:
+    name: npm — registry whoami
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify NPM_TOKEN
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${NPM_TOKEN:-}" ]]; then
+            echo "::error::NPM_TOKEN secret is not set"
+            exit 1
+          fi
+          status=$(curl -sS -o /tmp/body -w "%{http_code}" \
+            -H "Authorization: Bearer ${NPM_TOKEN}" \
+            https://registry.npmjs.org/-/whoami)
+          echo "HTTP ${status}"
+          cat /tmp/body
+          echo
+          if [[ "${status}" != "200" ]]; then
+            echo "::error::npm whoami returned HTTP ${status}"
+            exit 1
+          fi
+
+  cargo:
+    name: crates.io — /api/v1/me
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify CARGO_REGISTRY_TOKEN
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${CARGO_REGISTRY_TOKEN:-}" ]]; then
+            echo "::error::CARGO_REGISTRY_TOKEN secret is not set"
+            exit 1
+          fi
+          status=$(curl -sS -o /tmp/body -w "%{http_code}" \
+            -H "Authorization: ${CARGO_REGISTRY_TOKEN}" \
+            https://crates.io/api/v1/me)
+          echo "HTTP ${status}"
+          cat /tmp/body
+          echo
+          if [[ "${status}" != "200" ]]; then
+            echo "::error::crates.io /me returned HTTP ${status}"
+            exit 1
+          fi
+
+  pypi:
+    name: PyPI — upload-endpoint auth probe
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify PYPI_API_TOKEN
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${PYPI_API_TOKEN:-}" ]]; then
+            echo "::error::PYPI_API_TOKEN secret is not set"
+            exit 1
+          fi
+          # PyPI has no whoami endpoint. We POST an intentionally-empty
+          # form to the upload endpoint:
+          #   - 400 = auth accepted, payload rejected (what we want)
+          #   - 401 / 403 = auth rejected (token bad)
+          status=$(curl -sS -o /tmp/body -w "%{http_code}" \
+            -X POST \
+            -u "__token__:${PYPI_API_TOKEN}" \
+            -F ":action=file_upload" \
+            https://upload.pypi.org/legacy/)
+          echo "HTTP ${status}"
+          head -c 500 /tmp/body
+          echo
+          case "${status}" in
+            400)         echo "OK: auth accepted (payload rejected as expected)" ;;
+            401|403)     echo "::error::PyPI auth rejected (HTTP ${status})"; exit 1 ;;
+            *)           echo "::error::Unexpected HTTP ${status}"; exit 1 ;;
+          esac
