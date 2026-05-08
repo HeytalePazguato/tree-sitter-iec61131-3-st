@@ -2,15 +2,18 @@ name: prerelease
 
 # Two distinct flows live here:
 #
-#   develop    -> dev-build job: build snapshot artifacts, upload as workflow
-#                 artifact stamped 0.0.<run_number>-dev (90d retention),
-#                 trim to keep only the latest 3 dev artifacts.
+#   develop    -> dev-build job: regenerate the parser, run corpus tests,
+#                 upload `src/parser.c` as a workflow artifact stamped
+#                 0.0.<run_number>-dev (90d retention), trim to keep only the
+#                 latest 3 dev artifacts.
 #
 #   release/*  -> prerelease job: derive base version from branch name,
 #                 pick stage from commit-message keyword (default alpha,
 #                 [beta], [rc]), auto-increment the per-stage counter,
-#                 push the new tag, and let the release tool publish a
-#                 GitHub pre-release.
+#                 push the new tag, and publish a GitHub pre-release with
+#                 the generated parser.c attached. Registry publishing
+#                 (npm/crates.io/PyPI) is intentionally NOT done for
+#                 prereleases — they go out only on stable.
 on:
   push:
     branches: [develop, "release/**"]
@@ -21,7 +24,6 @@ permissions:
   # workflow artifacts via the GitHub API. Declaring any permissions block
   # silently scopes every unlisted permission to `none`.
   actions: write
-  # packages: write    # uncomment if pushing container images
 
 concurrency:
   group: prerelease-${{ github.ref }}
@@ -36,7 +38,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      # TODO: set up your language toolchain (same as ci.yml).
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: "npm" }
+
+      - name: Install tree-sitter-cli
+        run: npm install -g tree-sitter-cli
 
       - name: Compute dev version
         id: ver
@@ -45,25 +51,20 @@ jobs:
           echo "version=$v" >> "$GITHUB_OUTPUT"
           echo "tag=v$v"     >> "$GITHUB_OUTPUT"
 
-      # TODO: build snapshot artifacts. Examples:
-      #
-      # Go:
-      # - uses: goreleaser/goreleaser-action@v6
-      #   with: { version: "~> v2", args: release --snapshot --clean --skip=publish }
-      #   env: { GORELEASER_CURRENT_TAG: ${{ steps.ver.outputs.tag }} }
-      #
-      # Node:
-      # - run: npm ci && npm run build
-      #
-      # Python:
-      # - run: pipx run build
+      - name: Generate parser
+        run: tree-sitter generate
+
+      - name: Run corpus tests
+        run: tree-sitter test
 
       - name: Upload dev artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}-${{ steps.ver.outputs.version }}
           path: |
-            dist/**
+            src/parser.c
+            src/grammar.json
+            src/node-types.json
           retention-days: 90
 
       - name: Trim old dev artifacts (keep latest 3)
@@ -87,7 +88,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: set up your language toolchain.
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: "npm" }
+
+      - name: Install tree-sitter-cli
+        run: npm install -g tree-sitter-cli
 
       - name: Compute prerelease tag
         id: tag
@@ -122,6 +127,14 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Generate parser
+        if: steps.guard.outputs.exists == 'false'
+        run: tree-sitter generate
+
+      - name: Run corpus tests
+        if: steps.guard.outputs.exists == 'false'
+        run: tree-sitter test
+
       - name: Push tag
         if: steps.guard.outputs.exists == 'false'
         run: |
@@ -130,20 +143,16 @@ jobs:
           git tag "${{ steps.tag.outputs.tag }}"
           git push origin "${{ steps.tag.outputs.tag }}"
 
-      # TODO: run your release tool. It should detect the tag and publish a
-      # GitHub pre-release. Examples:
-      #
-      # Go:
-      # - uses: goreleaser/goreleaser-action@v6
-      #   with: { version: "~> v2", args: release --clean }
-      #   env:
-      #     GITHUB_TOKEN:              ${{ secrets.GITHUB_TOKEN }}
-      #     HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
-      #     SCOOP_GITHUB_TOKEN:        ${{ secrets.SCOOP_GITHUB_TOKEN }}
-      #
-      # Node:
-      # - run: npm ci && npm publish --tag next
-      #   env: { NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} }
+      - name: Create GitHub pre-release
+        if: steps.guard.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          prerelease: true
+          generate_release_notes: true
+          files: |
+            src/parser.c
 
       - name: Trim old prereleases (keep latest 5)
         if: steps.guard.outputs.exists == 'false'

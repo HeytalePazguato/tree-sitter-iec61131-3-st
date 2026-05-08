@@ -1,8 +1,8 @@
 name: ci
 
-# Gate workflow: lint + build + test. Must pass before any package or
-# release job is allowed to run. Triggered on every relevant branch push and
-# on PRs targeting main or develop.
+# Gate workflow: tree-sitter generate + corpus tests + parse all examples +
+# benchmark + per-binding (Node / Rust / Python / Go) build & test.
+# Must pass before any package or release job is allowed to run.
 on:
   push:
     branches: [main, develop, "release/**"]
@@ -14,42 +14,130 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint-build-test:
+  # ────────────────────────────────────────────────────────────────────────
+  # Grammar — the core of the project. Run on Linux only because the
+  # grammar is platform-independent and tree-sitter's CLI is fastest there.
+  # ────────────────────────────────────────────────────────────────────────
+  grammar:
+    name: grammar (corpus + examples + benchmark)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: "npm" }
+
+      - name: Install tree-sitter-cli
+        run: npm install -g tree-sitter-cli
+
+      - name: Verify generated parser is up to date
+        run: |
+          tree-sitter generate
+          if [[ -n "$(git status --porcelain src/)" ]]; then
+            echo "::error::src/ is out of date. Run 'tree-sitter generate' and commit."
+            git --no-pager diff src/
+            exit 1
+          fi
+
+      - name: Run corpus tests
+        run: tree-sitter test
+
+      - name: Parse every example file
+        run: |
+          set -euo pipefail
+          fails=0
+          for f in examples/*.st; do
+            if tree-sitter parse "$f" --quiet; then
+              echo "OK   $f"
+            else
+              echo "FAIL $f"
+              fails=$((fails + 1))
+            fi
+          done
+          if (( fails > 0 )); then
+            echo "::error::$fails example(s) failed to parse"
+            exit 1
+          fi
+
+      - name: Benchmark — parse 10 000 lines under 200 ms
+        run: |
+          # Construct a synthetic 10k-line file by repeating a representative
+          # example, then time the parse.
+          mkdir -p .benchmark
+          for i in $(seq 1 200); do
+            cat examples/pid-controller.st examples/conveyor.st examples/state-machine.st
+          done > .benchmark/big.st
+          lines=$(wc -l < .benchmark/big.st)
+          echo "Benchmark file: $lines lines"
+          start=$(date +%s%N)
+          tree-sitter parse .benchmark/big.st --quiet
+          end=$(date +%s%N)
+          elapsed_ms=$(( (end - start) / 1000000 ))
+          echo "Parse time: ${elapsed_ms} ms"
+          if (( elapsed_ms > 200 )); then
+            echo "::error::Parse exceeded 200 ms budget (${elapsed_ms} ms)"
+            exit 1
+          fi
+
+  # ────────────────────────────────────────────────────────────────────────
+  # Language bindings. Each platform / language combination compiles the
+  # generated parser and runs its smoke test.
+  # ────────────────────────────────────────────────────────────────────────
+
+  node:
+    name: node (${{ matrix.os }})
+    needs: grammar
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        # TODO: add a language-version dimension if your toolchain has one,
-        # e.g.  go: ["1.22.x", "1.23.x"]   node: ["20", "22"]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: "npm" }
+      - run: npm install
+      - run: npm test
 
-      # ──────────────────────────────────────────────────────────────────
-      # TODO: set up your language toolchain. Examples (uncomment one):
-      #
-      # - uses: actions/setup-go@v5
-      #   with: { go-version: ${{ matrix.go }}, cache: true }
-      #
-      # - uses: actions/setup-node@v4
-      #   with: { node-version: ${{ matrix.node }}, cache: 'npm' }
-      #
-      # - uses: actions/setup-python@v5
-      #   with: { python-version: ${{ matrix.python }}, cache: 'pip' }
-      #
-      # - uses: dtolnay/rust-toolchain@stable
-      # ──────────────────────────────────────────────────────────────────
+  rust:
+    name: rust (${{ matrix.os }})
+    needs: grammar
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --all-features
 
-      # TODO: install dependencies. Replace with your package manager.
-      # - run: npm ci
-      # - run: pip install -e ".[dev]"
-      # - run: cargo fetch
+  python:
+    name: python (${{ matrix.os }})
+    needs: grammar
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: "pip" }
+      - run: python -m pip install --upgrade pip build
+      - run: pip install -e ".[core]"
+      - run: python -c "import tree_sitter, tree_sitter_iec61131; lang = tree_sitter.Language(tree_sitter_iec61131.language()); print('Loaded:', lang)"
 
-      # TODO: lint
-      # - run: <lint command>
-
-      # TODO: build
-      # - run: <build command>
-
-      # TODO: test
-      # - run: <test command, with race/coverage flags as appropriate>
+  go:
+    name: go (${{ matrix.os }})
+    needs: grammar
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.22.x" }
+      - run: go test ./bindings/go/...
