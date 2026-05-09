@@ -52,7 +52,7 @@ jobs:
           # with NPM_TOKEN/NODE_AUTH_TOKEN in env, npm hits ENEEDAUTH.
           registry-url: "https://registry.npmjs.org"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with: { python-version: "3.11" }
 
       - uses: dtolnay/rust-toolchain@stable
