@@ -25,6 +25,10 @@ on:
 
 permissions:
   contents: write
+  # id-token is required for `npm publish --provenance` to mint the
+  # OIDC token that signs the provenance attestation. Without it, npm
+  # rejects --provenance with EUSAGE before uploading.
+  id-token: write
 
 concurrency:
   group: release-main
