@@ -3,15 +3,11 @@
 /build/
 /out/
 /target/
+/.benchmark/
+*.wasm
 
 # Local Claude Code settings
 .claude/
-
-# The blueprint conventions doc is part of THIS template repo for reference,
-# but new projects should not ship it. After "Use this template", run:
-#   git rm BLUEPRINT.md && git commit -m "chore: remove template reference"
-# This entry then ensures it doesn't get re-added by accident.
-/BLUEPRINT.md
 
 # Editor / IDE
 .idea/
@@ -28,8 +24,38 @@ Thumbs.db
 *.pem
 *.key
 
-# TODO: add language-specific ignores
-# Go:    *.exe, *.test, *.out, vendor/
-# Node:  node_modules/, npm-debug.log*, yarn-debug.log*, .next/, .nuxt/
-# Python: __pycache__/, *.py[cod], .venv/, .pytest_cache/, .ruff_cache/
-# Rust:  target/, **/*.rs.bk
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next/
+.nuxt/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# Rust
+**/*.rs.bk
+Cargo.lock
+
+# Go
+*.exe
+*.test
+*.out
+vendor/
+
+# tree-sitter
+log.html
+zig-cache/
+zig-out/
+prebuilds/
+
+# Generated build artifacts inside the dialect-extension demo
+# (the demo regenerates them on `tree-sitter generate`).
+/examples/dialect-extension/src/

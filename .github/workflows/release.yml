@@ -2,25 +2,41 @@ name: release
 
 # Stable release flow. Triggered when commits land on main (typically from a
 # release/* PR that bumped the VERSION file). Reads VERSION as the source of
-# truth, tags v<VERSION>, and runs the release tool to publish to all
-# configured channels.
+# truth, tags v<VERSION>, creates a GitHub release with the generated
+# parser.c attached, then publishes to npm / crates.io / PyPI.
 #
 # Idempotent: if the tag already exists (i.e. main was pushed without a
 # VERSION bump), the workflow exits cleanly without retagging or republishing.
+#
+# Publishing is GATED on the corresponding registry secret being set:
+#   NPM_TOKEN              → enables `npm publish`
+#   CARGO_REGISTRY_TOKEN   → enables `cargo publish`
+#   PYPI_API_TOKEN         → enables `twine upload`
+# Steps that lack their secret are skipped, so a partial registry rollout
+# (e.g. only npm at first) is supported without errors.
+#
+# A `preflight` job runs before `release` and exercises each token's
+# auth endpoint. If any *configured* token has been revoked or expired,
+# the release aborts before any publish, so we never end up with v0.0.1
+# half-released across registries.
 on:
   push:
     branches: [main]
 
 permissions:
   contents: write
-  # packages: write    # uncomment if pushing container images
 
 concurrency:
   group: release-main
   cancel-in-progress: false   # never cancel a release mid-flight
 
 jobs:
+  preflight:
+    uses: ./.github/workflows/preflight.yml
+    secrets: inherit
+
   release:
+    needs: preflight
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +44,16 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: set up your language toolchain.
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Install tree-sitter-cli
+        run: npm install -g tree-sitter-cli
 
       - name: Read VERSION
         id: ver
@@ -36,7 +61,7 @@ jobs:
           set -euo pipefail
           v=$(tr -d '[:space:]' < VERSION)
           if [ -z "$v" ]; then
-            echo "VERSION file is empty" >&2
+            echo "::error::VERSION file is empty"
             exit 1
           fi
           echo "version=$v" >> "$GITHUB_OUTPUT"
@@ -54,6 +79,15 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Verify generated parser is up to date
+        if: steps.guard.outputs.exists == 'false'
+        run: |
+          tree-sitter generate
+          if [[ -n "$(git status --porcelain src/)" ]]; then
+            echo "::error::src/ is out of date in main branch."
+            exit 1
+          fi
+
       - name: Push tag
         if: steps.guard.outputs.exists == 'false'
         run: |
@@ -62,42 +96,41 @@ jobs:
           git tag "${{ steps.ver.outputs.tag }}"
           git push origin "${{ steps.ver.outputs.tag }}"
 
-      # TODO: run your release tool. Examples below — uncomment one and
-      # delete the others. Always pass cross-repo publish tokens (taps,
-      # buckets, fork forks) explicitly via env.
-      #
-      # ─── Go (goreleaser) ─────────────────────────────────────────────
-      # - uses: docker/setup-qemu-action@v3
-      # - uses: docker/setup-buildx-action@v3
-      # - uses: docker/login-action@v3
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
-      # - if: steps.guard.outputs.exists == 'false'
-      #   uses: goreleaser/goreleaser-action@v6
-      #   with: { version: "~> v2", args: release --clean }
-      #   env:
-      #     GITHUB_TOKEN:              ${{ secrets.GITHUB_TOKEN }}
-      #     HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
-      #     SCOOP_GITHUB_TOKEN:        ${{ secrets.SCOOP_GITHUB_TOKEN }}
-      #
-      # ─── Node / npm ──────────────────────────────────────────────────
-      # - if: steps.guard.outputs.exists == 'false'
-      #   run: |
-      #     npm ci
-      #     npm run build
-      #     npm publish --provenance --access public
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      #
-      # ─── Python / PyPI ───────────────────────────────────────────────
-      # - if: steps.guard.outputs.exists == 'false'
-      #   run: pipx run build && pipx run twine upload dist/*
-      #   env:
-      #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      #
-      # ─── Rust / cargo ────────────────────────────────────────────────
-      # - if: steps.guard.outputs.exists == 'false'
-      #   run: cargo publish --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - name: Create GitHub release
+        if: steps.guard.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.ver.outputs.tag }}
+          name: tree-sitter-iec61131-3 ${{ steps.ver.outputs.version }}
+          generate_release_notes: true
+          files: |
+            src/parser.c
+
+      # ─── npm ────────────────────────────────────────────────────────────
+      - name: Publish to npm
+        if: steps.guard.outputs.exists == 'false' && env.NPM_TOKEN != ''
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm install --ignore-scripts
+          npm publish --access public --provenance
+
+      # ─── crates.io ──────────────────────────────────────────────────────
+      - name: Publish to crates.io
+        if: steps.guard.outputs.exists == 'false' && env.CARGO_REGISTRY_TOKEN != ''
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish --token "$CARGO_REGISTRY_TOKEN"
+
+      # ─── PyPI ───────────────────────────────────────────────────────────
+      - name: Publish to PyPI
+        if: steps.guard.outputs.exists == 'false' && env.PYPI_API_TOKEN != ''
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          PYPI_API_TOKEN:  ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          python -m twine upload --non-interactive dist/*
