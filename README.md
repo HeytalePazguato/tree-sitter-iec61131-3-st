@@ -9,7 +9,7 @@ A [tree-sitter] grammar for [IEC 61131-3][iec61131] **Structured Text** (ST) —
 
 > **About the name** — IEC 61131 is the umbrella PLC-programming standard. **Part 3** (`IEC 61131-3`) defines the programming languages: ST (Structured Text), LD (Ladder Diagram), FBD (Function Block Diagram), IL (Instruction List, deprecated), and SFC (Sequential Function Chart). This repo covers ST only — the `-3-st` suffix encodes both: Part 3 of the standard, ST language specifically.
 
-![tree-sitter-iec61131-3 demo — playground showing the parse tree for a state machine](assets/Demo.gif)
+![tree-sitter-iec61131-3 demo — playground showing the parse tree for a state machine](assets/demo.gif)
 
 ## Features
 
