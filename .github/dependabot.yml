@@ -10,36 +10,42 @@ updates:
       - "dependencies"
       - "ci"
 
-  # TODO: uncomment the ecosystem matching your project.
-  #
-  # - package-ecosystem: "gomod"
-  #   directory: "/"
-  #   schedule: { interval: "weekly" }
-  #   open-pull-requests-limit: 5
-  #   target-branch: "develop"
-  #   labels: ["dependencies"]
-  #
-  # - package-ecosystem: "npm"
-  #   directory: "/"
-  #   schedule: { interval: "weekly" }
-  #   open-pull-requests-limit: 5
-  #   target-branch: "develop"
-  #   labels: ["dependencies"]
-  #
-  # - package-ecosystem: "pip"
-  #   directory: "/"
-  #   schedule: { interval: "weekly" }
-  #   target-branch: "develop"
-  #   labels: ["dependencies"]
-  #
-  # - package-ecosystem: "cargo"
-  #   directory: "/"
-  #   schedule: { interval: "weekly" }
-  #   target-branch: "develop"
-  #   labels: ["dependencies"]
-  #
-  # - package-ecosystem: "docker"
-  #   directory: "/"
-  #   schedule: { interval: "monthly" }
-  #   target-branch: "develop"
-  #   labels: ["dependencies"]
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    target-branch: "develop"
+    labels:
+      - "dependencies"
+      - "javascript"
+
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    target-branch: "develop"
+    labels:
+      - "dependencies"
+      - "rust"
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    target-branch: "develop"
+    labels:
+      - "dependencies"
+      - "python"
+
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    target-branch: "develop"
+    labels:
+      - "dependencies"
+      - "go"

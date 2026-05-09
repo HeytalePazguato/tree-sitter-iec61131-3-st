@@ -1,6 +1,10 @@
 # tree-sitter-iec61131-3
 
 [![ci](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml/badge.svg)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/HeytalePazguato/tree-sitter-iec61131-3-st?display_name=tag&sort=semver)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/releases)
+[![npm](https://img.shields.io/npm/v/tree-sitter-iec61131-3?label=npm&logo=npm)](https://www.npmjs.com/package/tree-sitter-iec61131-3)
+[![crates.io](https://img.shields.io/crates/v/tree-sitter-iec61131-3?logo=rust)](https://crates.io/crates/tree-sitter-iec61131-3)
+[![PyPI](https://img.shields.io/pypi/v/tree-sitter-iec61131-3?logo=pypi&logoColor=white)](https://pypi.org/project/tree-sitter-iec61131-3/)
 [![license](https://img.shields.io/github/license/HeytalePazguato/tree-sitter-iec61131-3-st)](LICENSE)
 [![tree-sitter](https://img.shields.io/badge/tree--sitter-0.26%2B-7c3aed)](https://tree-sitter.github.io/tree-sitter/)
 [![IEC 61131-3](https://img.shields.io/badge/IEC%2061131--3-Structured%20Text-005f87)](https://en.wikipedia.org/wiki/IEC_61131-3)
@@ -150,7 +154,7 @@ VSCode does not natively use tree-sitter for grammar parsing — its highlightin
 
 ## What's covered, what's not
 
-Implemented in v0.0.x:
+Implemented in v0.0.1:
 - POU declarations: `PROGRAM`, `FUNCTION` (with return type), `FUNCTION_BLOCK`, `INTERFACE`, `TYPE`, `NAMESPACE`, `CONFIGURATION`, `RESOURCE`.
 - All `VAR_*` block kinds with `CONSTANT` / `RETAIN` / `NON_RETAIN` qualifiers, `AT %{I,Q,M}{X,B,W,D,L}` direct addresses, initial values.
 - All elementary types, generic `ANY_*` types, `STRING(N)` / `WSTRING(N)`, `ARRAY [a..b, …] OF`, structures, enumerations, subranges, `POINTER TO`, `REF_TO`.
@@ -160,7 +164,7 @@ Implemented in v0.0.x:
 - OOP (3rd edition): `METHOD` / `END_METHOD`, `PROPERTY` with `GET` / `SET` accessor bodies, `EXTENDS`, `IMPLEMENTS`, `INTERFACE`, `ABSTRACT` / `FINAL` / `OVERRIDE`, `PUBLIC` / `PRIVATE` / `PROTECTED` / `INTERNAL`, `THIS` / `SUPER`.
 - Comments (`(* … *)`, `//`) and pragmas (`{ … }`, opaque body).
 
-Out of scope for v0.0.x:
+Out of scope for v0.0.1:
 - Vendor dialect extensions (TwinCAT `__VERSION`, Codesys structured pragmas, B&R `ACTION`, etc.) — those will live in dialect repos that extend this grammar.
 - Other IEC 61131-3 languages — Ladder Diagram, Function Block Diagram, Instruction List, Sequential Function Chart.
 - Type checking, symbol resolution, code generation, formatting — this is a parser, not a compiler.
@@ -196,15 +200,15 @@ conventions: `develop → release/<version> → main`, semver from a single
 
 Future repos that will extend this base grammar:
 
-- `tree-sitter-iec61131-3-twincat` — Beckhoff TwinCAT 3 (TwinCAT-specific
+- `tree-sitter-iec61131-3-st-twincat` — Beckhoff TwinCAT 3 (TwinCAT-specific
   pragmas, `S=` / `R=` set/reset, `OR_ELSE` / `AND_THEN` short-circuit
   operators, conditional compilation, `ACTION` blocks).
-- `tree-sitter-iec61131-3-codesys` — Codesys 3 (attribute pragmas with
+- `tree-sitter-iec61131-3-st-codesys` — Codesys 3 (attribute pragmas with
   structured contents, action / transition blocks).
-- `tree-sitter-iec61131-3-br` — B&R Automation Studio (`ACTION`,
+- `tree-sitter-iec61131-3-st-br` — B&R Automation Studio (`ACTION`,
   task-specific extensions).
-- `tree-sitter-iec61131-3-siemens` — Siemens TIA Portal SCL.
-- `tree-sitter-iec61131-3-rockwell` — Rockwell Studio 5000 ST.
+- `tree-sitter-iec61131-3-st-siemens` — Siemens TIA Portal SCL.
+- `tree-sitter-iec61131-3-st-rockwell` — Rockwell Studio 5000 ST.
 
 Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and
 [EXTENDING.md](EXTENDING.md).
