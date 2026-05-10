@@ -41,6 +41,7 @@
   },
   "bindings": {
     "c": true,
+    "c_sharp": true,
     "go": true,
     "java": false,
     "node": true,
