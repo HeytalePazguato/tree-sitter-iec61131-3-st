@@ -1,10 +1,10 @@
 ---
 layout: default
-title: "tree-sitter-iec61131-3"
+title: "tree-sitter-iec61131-3-st"
 description: "tree-sitter grammar for IEC 61131-3 Structured Text — standard, dialect-extensible"
 ---
 
-# tree-sitter-iec61131-3
+# tree-sitter-iec61131-3-st
 
 A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the
 IEC 61131-3 (3rd edition, 2013) **Structured Text** language. Standard-compliant
@@ -30,22 +30,22 @@ live in separate dialect grammars that extend this base.
 
 ### Node
 ```sh
-npm install tree-sitter tree-sitter-iec61131-3
+npm install tree-sitter tree-sitter-iec61131-3-st
 ```
 
 ### Rust
 ```toml
-tree-sitter-iec61131-3 = "0.0"
+tree-sitter-iec61131-3-st = "0.0"
 ```
 
 ### Python
 ```sh
-pip install tree-sitter tree-sitter-iec61131-3
+pip install tree-sitter tree-sitter-iec61131-3-st
 ```
 
 ### Go
 ```go
-import iec61131_3 "github.com/HeytalePazguato/tree-sitter-iec61131-3-st/bindings/go"
+import iec61131_3_st "github.com/HeytalePazguato/tree-sitter-iec61131-3-st/bindings/go"
 ```
 
 ## Links

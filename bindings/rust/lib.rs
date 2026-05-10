@@ -7,7 +7,7 @@
 //! let code = r#"
 //! "#;
 //! let mut parser = tree_sitter::Parser::new();
-//! let language = tree_sitter_iec61131_3::LANGUAGE;
+//! let language = tree_sitter_iec61131_3_st::LANGUAGE;
 //! parser
 //!     .set_language(&language.into())
 //!     .expect("Error loading Iec611313 parser");
@@ -21,11 +21,11 @@
 use tree_sitter_language::LanguageFn;
 
 extern "C" {
-    fn tree_sitter_iec61131_3() -> *const ();
+    fn tree_sitter_iec61131_3_st() -> *const ();
 }
 
 /// The tree-sitter [`LanguageFn`] for this grammar.
-pub const LANGUAGE: LanguageFn = unsafe { LanguageFn::from_raw(tree_sitter_iec61131_3) };
+pub const LANGUAGE: LanguageFn = unsafe { LanguageFn::from_raw(tree_sitter_iec61131_3_st) };
 
 /// The content of the [`node-types.json`] file for this grammar.
 ///

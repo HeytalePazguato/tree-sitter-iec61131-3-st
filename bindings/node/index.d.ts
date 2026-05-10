@@ -25,10 +25,10 @@ type NodeInfo =
  *
  * @example
  * import Parser from "tree-sitter";
- * import Iec61131_3 from "tree-sitter-iec61131-3";
+ * import Iec61131_3St from "tree-sitter-iec61131-3-st";
  *
  * const parser = new Parser();
- * parser.setLanguage(Iec61131_3);
+ * parser.setLanguage(Iec61131_3St);
  */
 declare const binding: {
   /**

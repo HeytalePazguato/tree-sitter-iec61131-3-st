@@ -85,7 +85,7 @@ const PREC = {
 // ---------------------------------------------------------------------------
 
 export default grammar({
-  name: 'iec61131_3',
+  name: 'iec61131_3_st',
 
   word: ($) => $.identifier,
 

@@ -1,10 +1,10 @@
-# tree-sitter-iec61131-3
+# tree-sitter-iec61131-3-st
 
 [![ci](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml/badge.svg)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml)
 [![release](https://img.shields.io/github/v/release/HeytalePazguato/tree-sitter-iec61131-3-st?display_name=tag&sort=semver)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/releases)
-[![npm](https://img.shields.io/npm/v/tree-sitter-iec61131-3?label=npm&logo=npm)](https://www.npmjs.com/package/tree-sitter-iec61131-3)
-[![crates.io](https://img.shields.io/crates/v/tree-sitter-iec61131-3?logo=rust)](https://crates.io/crates/tree-sitter-iec61131-3)
-[![PyPI](https://img.shields.io/pypi/v/tree-sitter-iec61131-3?logo=pypi&logoColor=white)](https://pypi.org/project/tree-sitter-iec61131-3/)
+[![npm](https://img.shields.io/npm/v/tree-sitter-iec61131-3-st?label=npm&logo=npm)](https://www.npmjs.com/package/tree-sitter-iec61131-3-st)
+[![crates.io](https://img.shields.io/crates/v/tree-sitter-iec61131-3-st?logo=rust)](https://crates.io/crates/tree-sitter-iec61131-3-st)
+[![PyPI](https://img.shields.io/pypi/v/tree-sitter-iec61131-3-st?logo=pypi&logoColor=white)](https://pypi.org/project/tree-sitter-iec61131-3-st/)
 [![license](https://img.shields.io/github/license/HeytalePazguato/tree-sitter-iec61131-3-st)](LICENSE)
 [![tree-sitter](https://img.shields.io/badge/tree--sitter-0.26%2B-7c3aed)](https://tree-sitter.github.io/tree-sitter/)
 [![IEC 61131-3](https://img.shields.io/badge/IEC%2061131--3-Structured%20Text-005f87)](https://en.wikipedia.org/wiki/IEC_61131-3)
@@ -13,7 +13,7 @@ A [tree-sitter] grammar for [IEC 61131-3][iec61131] **Structured Text** (ST) —
 
 > **About the name** — IEC 61131 is the umbrella PLC-programming standard. **Part 3** (`IEC 61131-3`) defines the programming languages: ST (Structured Text), LD (Ladder Diagram), FBD (Function Block Diagram), IL (Instruction List, deprecated), and SFC (Sequential Function Chart). This repo covers ST only — the `-3-st` suffix encodes both: Part 3 of the standard, ST language specifically.
 
-![tree-sitter-iec61131-3 demo — playground showing the parse tree for a state machine](assets/demo.gif)
+![tree-sitter-iec61131-3-st demo — playground showing the parse tree for a state machine](assets/demo.gif)
 
 ## Features
 
@@ -65,7 +65,7 @@ Parsing this with `tree-sitter parse` produces a clean tree with
 ### Node
 
 ```sh
-npm install tree-sitter tree-sitter-iec61131-3
+npm install tree-sitter tree-sitter-iec61131-3-st
 ```
 
 ### Rust
@@ -74,18 +74,18 @@ npm install tree-sitter tree-sitter-iec61131-3
 # Cargo.toml
 [dependencies]
 tree-sitter = "0.25"
-tree-sitter-iec61131-3 = "0.0"
+tree-sitter-iec61131-3-st = "0.0"
 ```
 
 ### Python
 
 ```sh
-pip install tree-sitter tree-sitter-iec61131-3
+pip install tree-sitter tree-sitter-iec61131-3-st
 ```
 
 ```python
-import tree_sitter, tree_sitter_iec61131_3
-language = tree_sitter.Language(tree_sitter_iec61131_3.language())
+import tree_sitter, tree_sitter_iec61131_3_st
+language = tree_sitter.Language(tree_sitter_iec61131_3_st.language())
 parser = tree_sitter.Parser(language)
 tree = parser.parse(b"PROGRAM Hello END_PROGRAM")
 ```
@@ -95,7 +95,7 @@ tree = parser.parse(b"PROGRAM Hello END_PROGRAM")
 ```go
 import (
     sitter "github.com/tree-sitter/go-tree-sitter"
-    iec61131_3 "github.com/HeytalePazguato/tree-sitter-iec61131-3-st/bindings/go"
+    iec61131_3_st "github.com/HeytalePazguato/tree-sitter-iec61131-3-st/bindings/go"
 )
 ```
 
@@ -105,7 +105,7 @@ import (
 
 ```lua
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { 'iec61131_3' },   -- once published; pre-publish, install from local path
+  ensure_installed = { 'iec61131_3_st' },   -- once published; pre-publish, install from local path
   highlight = { enable = true },
   indent    = { enable = true },
   fold      = { enable = true },
@@ -116,7 +116,7 @@ For a local development install before the parser is on the npm/CDN registry, ad
 
 ```lua
 local parser_config = require'nvim-treesitter.parsers'.get_parser_configs()
-parser_config.iec61131_3 = {
+parser_config.iec61131_3_st = {
   install_info = {
     url = 'https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st',
     files = { 'src/parser.c' },
@@ -132,15 +132,15 @@ parser_config.iec61131_3 = {
 
 ```toml
 [[language]]
-name = "iec61131-3"
-scope = "source.iec61131-3"
+name = "iec61131-3-st"
+scope = "source.iec61131-3.st"
 file-types = ["st", "iecst"]
 roots = []
 comment-token = "//"
 indent = { tab-width = 4, unit = "    " }
 
 [[grammar]]
-name = "iec61131_3"
+name = "iec61131_3_st"
 source = { git = "https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st", rev = "main" }
 ```
 

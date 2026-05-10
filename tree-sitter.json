@@ -2,9 +2,9 @@
   "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
   "grammars": [
     {
-      "name": "iec61131_3",
-      "camelcase": "Iec61131_3",
-      "scope": "source.iec61131-3",
+      "name": "iec61131_3_st",
+      "camelcase": "Iec61131_3St",
+      "scope": "source.iec61131-3.st",
       "path": ".",
       "file-types": [
         "st",
