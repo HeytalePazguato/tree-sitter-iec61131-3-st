@@ -16,6 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [Developer Certificate of Origin](https://developercertificate.org).
   See [CONTRIBUTING.md](CONTRIBUTING.md#sign-your-work-dco) for details.
   No CLA — DCO is purely an attestation of contribution rights.
+- C# bindings via `TreeSitter.DotNet`: `Language.Create()` returns a typed
+  `TreeSitter.Language` object; `Language.HighlightsQuery`,
+  `InjectionsQuery`, `LocalsQuery`, and `TagsQuery` expose the bundled
+  `.scm` files as embedded-resource strings. Targets `net8.0`.
+- CI matrix job for C# (Linux / macOS / Windows) that builds the native
+  parser library and runs `dotnet test`.
+- Native library build artifacts and C# `bin/` / `obj/` directories added
+  to `.gitignore`.
 
 ### Fixed
 
