@@ -47,6 +47,34 @@ ci: <workflow change>
 The release-branch workflow looks for `[beta]` / `[rc]` keywords in commit
 messages to choose pre-release stages — keep those out of normal commits.
 
+## Sign your work (DCO)
+
+This project uses the [Developer Certificate of Origin](https://developercertificate.org)
+v1.1 as a lightweight contribution attestation. It is **not** a CLA — no
+form, no rights transfer. By signing off your commits, you are
+certifying that you wrote the patch (or otherwise have the right to
+submit it under the project's license — MIT). The full text is at the
+link above.
+
+Every commit must carry a `Signed-off-by` trailer matching the commit
+author's real name and email:
+
+```
+Signed-off-by: Jane Doe <jane@example.com>
+```
+
+Git adds this trailer automatically when you commit with the `-s` flag:
+
+```
+git commit -s -m "feat: add range subtype"
+```
+
+If you forget on the most recent commit, fix it with
+`git commit --amend --signoff`. For older commits in your branch, use
+`git rebase --signoff <base>`.
+
+Anonymous or pseudonymous sign-offs are not accepted.
+
 ## Reporting bugs
 
 Use the bug report template under "New Issue".

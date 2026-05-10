@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] — next: 0.0.2
 
+### Changed
+
+- Contributions now require a `Signed-off-by` trailer on every commit
+  (`git commit -s`) per the
+  [Developer Certificate of Origin](https://developercertificate.org).
+  See [CONTRIBUTING.md](CONTRIBUTING.md#sign-your-work-dco) for details.
+  No CLA — DCO is purely an attestation of contribution rights.
+
 ## [0.0.1] - 2026-05-09
 
 ### Changed

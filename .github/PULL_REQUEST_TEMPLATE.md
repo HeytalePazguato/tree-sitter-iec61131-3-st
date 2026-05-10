@@ -13,6 +13,8 @@ Brief description of what this PR does and why.
 - [ ] Tests pass
 - [ ] Manually verified the change
 - [ ] CHANGELOG `[Unreleased]` updated (if user-visible change)
+- [ ] All commits are signed off (`git commit -s`) per the
+      [DCO](../blob/main/CONTRIBUTING.md#sign-your-work-dco)
 
 ## Screenshots / sample output
 
