@@ -3,7 +3,7 @@ requires = ["setuptools>=62.4.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tree-sitter-iec61131-3"
+name = "tree-sitter-iec61131-3-st"
 description = "IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)"
 version = "0.0.1"
 keywords = ["incremental", "parsing", "tree-sitter", "iec61131-3"]

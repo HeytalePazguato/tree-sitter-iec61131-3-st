@@ -11,14 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Renamed the project from `tree-sitter-iec61131` to `tree-sitter-iec61131-3`
-  (and the repo to `tree-sitter-iec61131-3-st`) so the name encodes the
-  IEC 61131 part number. Part 3 of IEC 61131 is the one that defines the
-  PLC programming languages including ST. The `-3-` carries through to all
-  future dialect repos (e.g. `tree-sitter-iec61131-3-twincat`). Internal
-  grammar name is now `iec61131_3`; C function symbol is
-  `tree_sitter_iec61131_3`. No published artifacts existed under the old
-  name, so this is purely a pre-release rename.
+- Renamed the project to `tree-sitter-iec61131-3-st` so the name encodes
+  both the IEC 61131 part number (Part 3 — programming languages) **and**
+  the specific language (ST), distinguishing it from future grammars for
+  the other Part-3 languages (FBD, LD, IL, SFC). The `-3-st-` carries
+  through to all future vendor-dialect repos
+  (e.g. `tree-sitter-iec61131-3-st-twincat`). Internal grammar name is
+  `iec61131_3_st`; C function symbol is `tree_sitter_iec61131_3_st`;
+  TextMate scope is `source.iec61131-3.st`. Distribution names align
+  across npm, crates.io, and PyPI. No published artifacts existed under
+  any prior name, so this is purely a pre-release rename.
 
 ### Added
 

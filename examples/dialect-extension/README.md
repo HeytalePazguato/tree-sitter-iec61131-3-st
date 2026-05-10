@@ -1,8 +1,8 @@
 # Worked dialect-extension example
 
-This directory shows how to extend `tree-sitter-iec61131-3` with vendor-specific constructs without forking the base grammar.
+This directory shows how to extend `tree-sitter-iec61131-3-st` with vendor-specific constructs without forking the base grammar.
 
-It is **not** a published parser — it lives inside the base repo as a runnable proof that the extension architecture is sound. A real dialect grammar would live in its own GitHub repo (e.g. `tree-sitter-iec61131-3-twincat`) and add many more constructs.
+It is **not** a published parser — it lives inside the base repo as a runnable proof that the extension architecture is sound. A real dialect grammar would live in its own GitHub repo (e.g. `tree-sitter-iec61131-3-st-twincat`) and add many more constructs.
 
 ## What it adds
 
@@ -17,10 +17,10 @@ See [`grammar.js`](grammar.js) for the implementation. It is ~80 lines including
 ## How it works
 
 ```js
-import base, { kw } from 'tree-sitter-iec61131-3/grammar';
+import base, { kw } from 'tree-sitter-iec61131-3-st/grammar';
 
 export default grammar(base, {
-  name: 'iec61131_3_twincat',
+  name: 'iec61131_3_st_twincat',
 
   rules: {
     _expression: ($, original) =>
@@ -48,9 +48,9 @@ This stub is not pre-built. To verify it works:
 cd examples/dialect-extension
 
 # Resolve the base grammar via the parent directory.
-# In a real dialect repo, run instead: `npm install tree-sitter-iec61131-3`
+# In a real dialect repo, run instead: `npm install tree-sitter-iec61131-3-st`
 # (and switch the `../../grammar.js` import path in grammar.js to
-# `tree-sitter-iec61131-3/grammar`).
+# `tree-sitter-iec61131-3-st/grammar`).
 
 tree-sitter generate           # writes src/parser.c for the dialect
 tree-sitter parse sample.st    # should succeed and contain
@@ -64,10 +64,10 @@ If the parse succeeds and the tree contains both extension node types, the exten
 
 To create your own dialect:
 
-1. `mkdir tree-sitter-iec61131-3-<vendor> && cd $_`
-2. `npm init -y && npm install tree-sitter-iec61131-3`
+1. `mkdir tree-sitter-iec61131-3-st-<vendor> && cd $_`
+2. `npm init -y && npm install tree-sitter-iec61131-3-st`
 3. Copy this directory's `grammar.js` and adapt the rule overrides to your dialect's syntax.
 4. Set up `tree-sitter.json`, `package.json`, and bindings the same way as this base repo.
-5. Push to a separate GitHub repo named `tree-sitter-iec61131-3-<vendor>`.
+5. Push to a separate GitHub repo named `tree-sitter-iec61131-3-st-<vendor>`.
 
 See [../../EXTENDING.md](../../EXTENDING.md) for the full guide, including the list of all extension points and the rationale for each.

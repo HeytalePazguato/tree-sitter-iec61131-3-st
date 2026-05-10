@@ -1,5 +1,5 @@
 {
-  "name": "tree-sitter-iec61131-3",
+  "name": "tree-sitter-iec61131-3-st",
   "version": "0.0.1",
   "description": "IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)",
   "type": "module",
@@ -18,7 +18,7 @@
     "incremental",
     "parsing",
     "tree-sitter",
-    "iec61131_3"
+    "iec61131_3_st"
   ],
   "files": [
     "grammar.js",

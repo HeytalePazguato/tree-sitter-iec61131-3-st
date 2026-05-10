@@ -158,7 +158,7 @@ The following are deliberately NOT covered. Each is either a different IEC 61131
 | Symbol resolution          | A semantic concern.                                      | A separate analyzer / language server. |
 | Code generation            | Out of scope.                                            | A separate tool. |
 | Cross-file analysis        | Per-file parsing is the contract here.                   | A separate analyzer. |
-| Vendor-specific extensions | Documented in EXTENDING.md.                              | `tree-sitter-iec61131-3-<vendor>` repos. |
+| Vendor-specific extensions | Documented in EXTENDING.md.                              | `tree-sitter-iec61131-3-st-<vendor>` repos. |
 
 ---
 

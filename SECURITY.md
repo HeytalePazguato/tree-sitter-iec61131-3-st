@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in tree-sitter-iec61131-3, please
+If you discover a security vulnerability in tree-sitter-iec61131-3-st, please
 report it responsibly.
 
 **Preferred channel:** open a private security advisory through GitHub:

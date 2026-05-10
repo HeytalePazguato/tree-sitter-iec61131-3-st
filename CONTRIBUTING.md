@@ -1,4 +1,4 @@
-# Contributing to tree-sitter-iec61131-3
+# Contributing to tree-sitter-iec61131-3-st
 
 Thanks for your interest! Contributions of any size are welcome — bug
 reports, fixes, new features, doc improvements.
