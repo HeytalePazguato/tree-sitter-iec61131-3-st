@@ -305,12 +305,17 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Build and publish to PyPI
+      - name: Build and publish to PyPI (sdist only)
         if: steps.token.outputs.skip == 'false' && steps.published.outputs.skip == 'false'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
+          # PyPI rejects raw `linux_*` platform tags; only manylinux /
+          # musllinux / macOS / Windows wheels are accepted. We ship sdist
+          # only for now — pip compiles src/parser.c locally on install.
+          # Pre-built wheels for the full Python × OS matrix are deferred
+          # to a later release via cibuildwheel.
           python -m pip install --upgrade build twine
-          python -m build
-          python -m twine upload --non-interactive dist/*
+          python -m build --sdist
+          python -m twine upload --non-interactive dist/*.tar.gz
