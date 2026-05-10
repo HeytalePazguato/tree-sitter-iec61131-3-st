@@ -141,3 +141,37 @@ jobs:
       - uses: actions/setup-go@v5
         with: { go-version: "1.22.x" }
       - run: go test ./bindings/go/...
+
+  csharp:
+    name: c# (${{ matrix.os }})
+    needs: grammar
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: "8.x" }
+
+      - name: Build native library (Unix)
+        if: runner.os != 'Windows'
+        run: make
+
+      - name: Build native library (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cl /std:c11 /utf-8 /LD /I src src/parser.c /Fe:tree-sitter-iec61131-3-st.dll
+        shell: cmd
+
+      - name: Run C# tests (Unix)
+        if: runner.os != 'Windows'
+        run: dotnet test bindings/c_sharp/TreeSitterIec611313St.Tests/
+        env:
+          LD_LIBRARY_PATH: ${{ github.workspace }}
+          DYLD_LIBRARY_PATH: ${{ github.workspace }}
+
+      - name: Run C# tests (Windows)
+        if: runner.os == 'Windows'
+        run: dotnet test bindings/c_sharp/TreeSitterIec611313St.Tests/

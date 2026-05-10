@@ -56,6 +56,19 @@ zig-cache/
 zig-out/
 prebuilds/
 
+# Native library build outputs (produced by make / cmake in repo root)
+libtree-sitter-iec61131-3-st.so
+libtree-sitter-iec61131-3-st.a
+libtree-sitter-iec61131-3-st.dylib
+libtree-sitter-iec61131-3-st.dll
+libtree-sitter-iec61131-3-st.dll.a
+tree-sitter-iec61131-3-st.pc
+src/*.o
+
+# C# build outputs
+bindings/c_sharp/**/bin/
+bindings/c_sharp/**/obj/
+
 # Generated build artifacts inside the dialect-extension demo
 # (the demo regenerates them on `tree-sitter generate`).
 /examples/dialect-extension/src/
