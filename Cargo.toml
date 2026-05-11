@@ -2,7 +2,7 @@
 name = "tree-sitter-iec61131-3-st"
 description = "IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)"
 version = "0.0.1"
-authors = ["HeytalePazguato <Jecs.09@pm.me>"]
+authors = ["HeytalePazguato <Heytale.Pazguato@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 keywords = ["incremental", "parsing", "tree-sitter", "iec61131-3"]

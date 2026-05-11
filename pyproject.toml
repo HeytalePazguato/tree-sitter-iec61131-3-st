@@ -13,7 +13,8 @@ classifiers = [
   "Topic :: Text Processing :: Linguistic",
   "Typing :: Typed",
 ]
-authors = [{ name = "HeytalePazguato", email = "Jecs.09@pm.me" }]
+authors     = [{ name = "HeytalePazguato" }]
+maintainers = [{ name = "HeytalePazguato", email = "Heytale.Pazguato@gmail.com" }]
 requires-python = ">=3.10"
 license.text = "MIT"
 readme = "README.md"

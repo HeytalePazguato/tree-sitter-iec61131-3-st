@@ -1,6 +1,6 @@
 /**
  * @file IEC 61131-3 Structured Text grammar for tree-sitter
- * @author HeytalePazguato <Jecs.09@pm.me>
+ * @author HeytalePazguato <Heytale.Pazguato@gmail.com>
  * @license MIT
  *
  * Implements the standard IEC 61131-3 (3rd edition, 2013) Structured Text
