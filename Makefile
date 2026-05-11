@@ -1,6 +1,6 @@
 LANGUAGE_NAME := tree-sitter-iec61131-3-st
 HOMEPAGE_URL := https://github.com/heytalepazguato/tree-sitter-iec61131-3-st
-VERSION := 0.0.1
+VERSION := 0.0.2
 
 # repository
 SRC_DIR := src
