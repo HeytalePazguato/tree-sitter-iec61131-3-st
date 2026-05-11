@@ -11,13 +11,23 @@ structure; per-language slots are called out.
 ## 1. Branch flow
 
 ```
-develop  →  release/<version>  →  main
+develop  →  release/<version>  →  main          (planned releases)
+                hotfix/<version> →  main         (emergency patches)
 ```
 
 - **`develop`** — daily integration target. All feature/fix PRs land here.
+  **Never** the source branch of a PR to `main` (see "main" below).
 - **`release/<version>`** (e.g. `release/0.1.0`) — pre-release stabilization
   branch cut from `develop`. Bump VERSION + CHANGELOG date here.
-- **`main`** — stable releases only. Never PR directly.
+- **`hotfix/<version>`** (e.g. `hotfix/0.1.1`) — emergency patch branch cut
+  directly from `main` when `develop` has unfinished work that can't ship.
+  PR back to `main`; after merge, fast-forward `main → develop` so the fix
+  enters integration. Use sparingly; prefer the regular `release/*` flow.
+- **`main`** — stable releases only. Source of any PR to `main` is always
+  `release/*` or `hotfix/*` — **never `develop` directly**. The repo's
+  `delete_branch_on_merge: true` (section 5) auto-deletes the source
+  branch on merge; routing through `release/*` / `hotfix/*` keeps
+  `develop` from being wiped out by that setting on every release.
 
 Never force-push shared branches. Never skip hooks.
 
@@ -145,6 +155,7 @@ gh repo edit <OWNER>/<REPO> \
   --homepage "https://<owner>.github.io/<repo>/" \
   --enable-wiki=false \
   --enable-discussions=true \
+  --delete-branch-on-merge=true \
   --add-topic <topic1> --add-topic <topic2> ...   # up to 20
 
 # Enable Pages with Actions build type
@@ -152,6 +163,12 @@ gh api -X POST repos/<OWNER>/<REPO>/pages \
   -H "Accept: application/vnd.github+json" \
   -f "build_type=workflow"
 ```
+
+`--delete-branch-on-merge=true` keeps `release/*` and `hotfix/*` tidy
+after they merge to `main`. It's the reason PRs to `main` must come from
+those branches and **not from `develop`** — the setting deletes the
+source branch of every merged PR, so PR'ing `develop` directly to `main`
+nukes `develop` on the remote.
 
 **Topics:** pick 10–20 from the relevant ecosystem (language, domain,
 audience). They drive GitHub's discovery surface.
@@ -250,6 +267,9 @@ Keywords with workflow side-effects:
 ## 8. What NOT to do
 
 - ❌ Push directly to `main`.
+- ❌ PR `develop` directly to `main`. Always cut a `release/*` (planned)
+  or `hotfix/*` (emergency) branch first — otherwise the
+  `delete_branch_on_merge` repo setting wipes `develop` on the remote.
 - ❌ Force-push shared branches.
 - ❌ Skip hooks (`--no-verify`).
 - ❌ Commit secrets, `.env`, or local IDE state.

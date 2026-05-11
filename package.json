@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-iec61131-3-st",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)",
   "type": "module",
   "repository": {
@@ -10,7 +10,7 @@
   "license": "MIT",
   "author": {
     "name": "HeytalePazguato",
-    "email": "Jecs.09@pm.me"
+    "email": "Heytale.Pazguato@gmail.com"
   },
   "main": "bindings/node",
   "types": "bindings/node",

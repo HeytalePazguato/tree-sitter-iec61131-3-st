@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tree-sitter-iec61131-3-st"
 description = "IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)"
-version = "0.0.1"
+version = "0.0.2"
 keywords = ["incremental", "parsing", "tree-sitter", "iec61131-3"]
 classifiers = [
   "Intended Audience :: Developers",
@@ -13,7 +13,8 @@ classifiers = [
   "Topic :: Text Processing :: Linguistic",
   "Typing :: Typed",
 ]
-authors = [{ name = "HeytalePazguato", email = "Jecs.09@pm.me" }]
+authors     = [{ name = "HeytalePazguato" }]
+maintainers = [{ name = "HeytalePazguato", email = "Heytale.Pazguato@gmail.com" }]
 requires-python = ">=3.10"
 license.text = "MIT"
 readme = "README.md"
