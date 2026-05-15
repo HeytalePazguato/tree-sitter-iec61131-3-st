@@ -5,7 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — next: 0.0.3
+## [Unreleased] — next: 0.1.0
+
+### Added
+
+- C# bindings via `TreeSitter.DotNet`: `Language.Create()` returns a typed
+  `TreeSitter.Language` object; `Language.HighlightsQuery`,
+  `InjectionsQuery`, `LocalsQuery`, and `TagsQuery` expose the bundled
+  `.scm` files as embedded-resource strings. Targets `net8.0`. NuGet
+  package id `TreeSitterIec61131_3St`. Initial scaffolding contributed by
+  @beslst in #11; finished and brought up to current `develop` here.
+- CI matrix job for C# (Linux / macOS / Windows) that builds the native
+  parser library and runs `dotnet test`. The Windows leg loads the MSVC
+  environment via `ilammy/msvc-dev-cmd` before invoking `cl`.
+- Native library build artifacts (`*.so` / `*.a` / `*.dylib` / `*.dll` /
+  `*.dll.a` / `*.lib` / `*.pdb` / `src/*.o` / `*.pc`) and C# `bin/` /
+  `obj/` directories added to `.gitignore`.
 
 ## [0.0.2] - 2026-05-11
 
@@ -16,14 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [Developer Certificate of Origin](https://developercertificate.org).
   See [CONTRIBUTING.md](CONTRIBUTING.md#sign-your-work-dco) for details.
   No CLA — DCO is purely an attestation of contribution rights.
-- C# bindings via `TreeSitter.DotNet`: `Language.Create()` returns a typed
-  `TreeSitter.Language` object; `Language.HighlightsQuery`,
-  `InjectionsQuery`, `LocalsQuery`, and `TagsQuery` expose the bundled
-  `.scm` files as embedded-resource strings. Targets `net8.0`.
-- CI matrix job for C# (Linux / macOS / Windows) that builds the native
-  parser library and runs `dotnet test`.
-- Native library build artifacts and C# `bin/` / `obj/` directories added
-  to `.gitignore`.
 
 ### Fixed
 
