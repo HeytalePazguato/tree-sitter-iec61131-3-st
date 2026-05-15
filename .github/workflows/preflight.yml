@@ -119,3 +119,35 @@ jobs:
             401|403)     echo "::error::PyPI auth rejected (HTTP ${status})"; exit 1 ;;
             *)           echo "::error::Unexpected HTTP ${status}"; exit 1 ;;
           esac
+
+  nuget:
+    name: NuGet — verifykey auth probe
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify NUGET_API_KEY
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${NUGET_API_KEY:-}" ]]; then
+            echo "::warning::NUGET_API_KEY secret is not set; skipping check"
+            exit 0
+          fi
+          # NuGet exposes a verifykey endpoint that confirms whether an
+          # API key is authorized to push a given package id. We use our
+          # own PackageId; result interpretation:
+          #   - 200 = key authorized to push TreeSitterIec61131_3St
+          #   - 403 = key valid but not scoped for this package
+          #   - 401 = key invalid
+          # We accept 200 only; everything else is fatal.
+          status=$(curl -sS -o /tmp/body -w "%{http_code}" \
+            -H "X-NuGet-ApiKey: ${NUGET_API_KEY}" \
+            https://www.nuget.org/api/v2/verifykey/TreeSitterIec61131_3St)
+          echo "HTTP ${status}"
+          head -c 500 /tmp/body
+          echo
+          case "${status}" in
+            200)         echo "OK: key authorized for TreeSitterIec61131_3St" ;;
+            401|403)     echo "::error::NuGet auth rejected (HTTP ${status})"; exit 1 ;;
+            *)           echo "::error::Unexpected HTTP ${status}"; exit 1 ;;
+          esac
