@@ -26,7 +26,7 @@
     }
   ],
   "metadata": {
-    "version": "0.0.2",
+    "version": "0.1.0",
     "license": "MIT",
     "description": "IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)",
     "authors": [
@@ -41,6 +41,7 @@
   },
   "bindings": {
     "c": true,
+    "c_sharp": true,
     "go": true,
     "java": false,
     "node": true,
