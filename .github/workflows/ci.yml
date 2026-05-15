@@ -178,4 +178,7 @@ jobs:
 
       - name: Run C# tests (Windows)
         if: runner.os == 'Windows'
-        run: dotnet test bindings/c_sharp/TreeSitterIec61131_3St.Tests/
+        shell: pwsh
+        run: |
+          $env:PATH = "$env:GITHUB_WORKSPACE;$env:PATH"
+          dotnet test bindings/c_sharp/TreeSitterIec61131_3St.Tests/
