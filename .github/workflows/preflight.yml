@@ -133,13 +133,15 @@ jobs:
             echo "::warning::NUGET_API_KEY secret is not set; skipping check"
             exit 0
           fi
-          # NuGet exposes a verifykey endpoint that confirms whether an
-          # API key is authorized to push a given package id. We use our
-          # own PackageId; result interpretation:
-          #   - 200 = key authorized to push TreeSitterIec61131_3St
-          #   - 403 = key valid but not scoped for this package
-          #   - 401 = key invalid
-          # We accept 200 only; everything else is fatal.
+          # NuGet's verifykey endpoint is the closest thing to a "is this
+          # key valid" probe, but it is finicky for the modern-scoped-key
+          # plus first-publish combination: it returns 400 Bad Request
+          # for keys that haven't yet pushed the target id, even when
+          # the key is valid and scoped correctly. Result interpretation:
+          #   - 200       = key authorized for TreeSitterIec61131_3St (great)
+          #   - 401 / 403 = explicit auth rejection (fatal)
+          #   - other     = endpoint quirk; warn and pass, dotnet nuget
+          #                 push is the source of truth at release time
           status=$(curl -sS -o /tmp/body -w "%{http_code}" \
             -H "X-NuGet-ApiKey: ${NUGET_API_KEY}" \
             https://www.nuget.org/api/v2/verifykey/TreeSitterIec61131_3St)
@@ -149,5 +151,5 @@ jobs:
           case "${status}" in
             200)         echo "OK: key authorized for TreeSitterIec61131_3St" ;;
             401|403)     echo "::error::NuGet auth rejected (HTTP ${status})"; exit 1 ;;
-            *)           echo "::error::Unexpected HTTP ${status}"; exit 1 ;;
+            *)           echo "::warning::verifykey returned HTTP ${status}; cannot confirm auth via this endpoint, deferring validation to dotnet nuget push" ;;
           esac
