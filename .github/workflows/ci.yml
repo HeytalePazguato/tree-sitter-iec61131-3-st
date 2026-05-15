@@ -155,6 +155,10 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with: { dotnet-version: "8.x" }
 
+      - name: Setup MSVC env (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Build native library (Unix)
         if: runner.os != 'Windows'
         run: make
