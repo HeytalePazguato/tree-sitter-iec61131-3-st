@@ -167,11 +167,11 @@ jobs:
 
       - name: Run C# tests (Unix)
         if: runner.os != 'Windows'
-        run: dotnet test bindings/c_sharp/TreeSitterIec611313St.Tests/
+        run: dotnet test bindings/c_sharp/TreeSitterIec61131_3St.Tests/
         env:
           LD_LIBRARY_PATH: ${{ github.workspace }}
           DYLD_LIBRARY_PATH: ${{ github.workspace }}
 
       - name: Run C# tests (Windows)
         if: runner.os == 'Windows'
-        run: dotnet test bindings/c_sharp/TreeSitterIec611313St.Tests/
+        run: dotnet test bindings/c_sharp/TreeSitterIec61131_3St.Tests/

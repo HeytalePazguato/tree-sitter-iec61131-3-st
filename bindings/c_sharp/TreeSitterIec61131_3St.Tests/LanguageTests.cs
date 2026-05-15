@@ -1,7 +1,7 @@
 using TreeSitter;
 using Xunit;
 
-namespace TreeSitterIec611313St.Tests;
+namespace TreeSitterIec61131_3St.Tests;
 
 public class LanguageTests
 {

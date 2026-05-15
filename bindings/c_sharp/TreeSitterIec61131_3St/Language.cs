@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using TreeSitter;
 
-namespace TreeSitterIec611313St;
+namespace TreeSitterIec61131_3St;
 
 /// <summary>
 /// Provides access to the IEC 61131-3 Structured Text tree-sitter grammar.
@@ -44,7 +44,7 @@ public static class Language
 
     private static string? GetQuery(string fileName)
     {
-        var resourceName = $"TreeSitterIec611313St.queries.{fileName}";
+        var resourceName = $"TreeSitterIec61131_3St.queries.{fileName}";
         using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
         if (stream is null) return null;
         using var reader = new System.IO.StreamReader(stream);

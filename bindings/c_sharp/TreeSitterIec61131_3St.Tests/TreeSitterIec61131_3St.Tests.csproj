@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../TreeSitterIec611313St/TreeSitterIec611313St.csproj" />
+    <ProjectReference Include="../TreeSitterIec61131_3St/TreeSitterIec61131_3St.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,8 +5,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
 
-    <PackageId>TreeSitterIec611313St</PackageId>
-    <Version>0.0.1</Version>
+    <PackageId>TreeSitterIec61131_3St</PackageId>
+    <Version>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)../../../VERSION').Trim())</Version>
     <Authors>HeytalePazguato</Authors>
     <Description>IEC 61131-3 Structured Text grammar for tree-sitter (standard, dialect-extensible)</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -23,13 +23,13 @@
   <!-- Embed query files so consumers can access them via Language.*Query -->
   <ItemGroup>
     <EmbeddedResource Include="../../../queries/highlights.scm"
-                      LogicalName="TreeSitterIec611313St.queries.highlights.scm" />
+                      LogicalName="TreeSitterIec61131_3St.queries.highlights.scm" />
     <EmbeddedResource Include="../../../queries/injections.scm"
-                      LogicalName="TreeSitterIec611313St.queries.injections.scm" />
+                      LogicalName="TreeSitterIec61131_3St.queries.injections.scm" />
     <EmbeddedResource Include="../../../queries/locals.scm"
-                      LogicalName="TreeSitterIec611313St.queries.locals.scm" />
+                      LogicalName="TreeSitterIec61131_3St.queries.locals.scm" />
     <EmbeddedResource Include="../../../queries/tags.scm"
-                      LogicalName="TreeSitterIec611313St.queries.tags.scm" />
+                      LogicalName="TreeSitterIec61131_3St.queries.tags.scm" />
   </ItemGroup>
 
 </Project>
