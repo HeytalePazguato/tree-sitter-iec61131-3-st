@@ -26,7 +26,7 @@ name: release
 #   blocked and has since been unblocked) without re-running the others.
 #
 # Publishing is GATED on the corresponding registry secret being set:
-#   NPM_TOKEN              → enables `npm publish`
+#   (npm)                  → published via OIDC Trusted Publishing (no token)
 #   CARGO_REGISTRY_TOKEN   → enables `cargo publish`
 #   PYPI_API_TOKEN         → enables `twine upload`
 #   NUGET_API_KEY          → enables `dotnet nuget push`
@@ -166,20 +166,11 @@ jobs:
           # with NPM_TOKEN/NODE_AUTH_TOKEN in env, npm hits ENEEDAUTH.
           registry-url: "https://registry.npmjs.org"
 
-      - name: Token gate
-        id: token
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          if [[ -z "${NPM_TOKEN:-}" ]]; then
-            echo "::warning::NPM_TOKEN is not set; skipping npm publish."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-          fi
+      # OIDC trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.
+      - name: Upgrade npm for OIDC trusted publishing
+        run: npm install -g npm@latest
 
       - name: Per-version idempotence guard
-        if: steps.token.outputs.skip == 'false'
         id: published
         env:
           VERSION: ${{ needs.prepare.outputs.version }}
@@ -196,11 +187,12 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Publish to npm
-        if: steps.token.outputs.skip == 'false' && steps.published.outputs.skip == 'false'
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # No token: authentication is via GitHub OIDC (npm Trusted Publishing).
+      # Configure once at npmjs.com -> the tree-sitter-iec61131-3-st package ->
+      # Settings -> Trusted Publisher (GitHub Actions, repo
+      # HeytalePazguato/tree-sitter-iec61131-3-st, workflow release.yml).
+      - name: Publish to npm (OIDC trusted publishing)
+        if: steps.published.outputs.skip == 'false'
         run: |
           npm install --ignore-scripts
           npm publish --access public --provenance

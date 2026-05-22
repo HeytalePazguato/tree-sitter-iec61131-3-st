@@ -28,29 +28,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  npm:
-    name: npm — registry whoami
-    runs-on: ubuntu-latest
-    steps:
-      - name: Verify NPM_TOKEN
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [[ -z "${NPM_TOKEN:-}" ]]; then
-            echo "::warning::NPM_TOKEN secret is not set; skipping check"
-            exit 0
-          fi
-          status=$(curl -sS -o /tmp/body -w "%{http_code}" \
-            -H "Authorization: Bearer ${NPM_TOKEN}" \
-            https://registry.npmjs.org/-/whoami)
-          echo "HTTP ${status}"
-          cat /tmp/body
-          echo
-          if [[ "${status}" != "200" ]]; then
-            echo "::error::npm whoami returned HTTP ${status}"
-            exit 1
-          fi
+  # npm has no token to preflight: it publishes via OIDC Trusted Publishing,
+  # so auth is established at publish time by GitHub OIDC against the
+  # trusted-publisher config on npmjs.com (no NPM_TOKEN secret involved).
 
   cargo:
     name: crates.io — publish-endpoint auth probe
