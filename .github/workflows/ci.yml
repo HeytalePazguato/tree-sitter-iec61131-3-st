@@ -98,6 +98,28 @@ jobs:
       - run: npm install
       - run: npm test
 
+  # Builds the grammar to WebAssembly and loads it through the web-tree-sitter
+  # runtime, exercising the WASM path that downstream consumers use to avoid the
+  # native node-tree-sitter build (which fails on Node 24 / Electron without
+  # prebuilds). --ignore-scripts skips the native gyp build we don't need here.
+  wasm:
+    name: wasm (web-tree-sitter smoke)
+    needs: grammar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: "22" }
+      - uses: mymindstorm/setup-emsdk@v16
+      - name: Install tree-sitter-cli
+        run: npm install -g tree-sitter-cli
+      - name: Build WASM grammar
+        run: tree-sitter build --wasm -o tree-sitter-iec61131_3_st.wasm .
+      - name: Install web-tree-sitter
+        run: npm install --ignore-scripts
+      - name: Parse every example via web-tree-sitter
+        run: node scripts/wasm-smoke.mjs
+
   rust:
     name: rust (${{ matrix.os }})
     needs: grammar

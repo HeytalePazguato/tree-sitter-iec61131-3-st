@@ -187,6 +187,22 @@ jobs:
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # Build the grammar to WebAssembly so the published tarball ships
+      # tree-sitter-iec61131_3_st.wasm (matched by the `*.wasm` files glob in
+      # package.json). This lets consumers load the parser via web-tree-sitter
+      # with no native toolchain. emsdk puts emcc on PATH for `build --wasm`.
+      - name: Set up Emscripten
+        if: steps.published.outputs.skip == 'false'
+        uses: mymindstorm/setup-emsdk@v16
+
+      - name: Install tree-sitter-cli
+        if: steps.published.outputs.skip == 'false'
+        run: npm install -g tree-sitter-cli
+
+      - name: Build WASM grammar
+        if: steps.published.outputs.skip == 'false'
+        run: tree-sitter build --wasm -o tree-sitter-iec61131_3_st.wasm .
+
       # No token: authentication is via GitHub OIDC (npm Trusted Publishing).
       # Configure once at npmjs.com -> the tree-sitter-iec61131-3-st package ->
       # Settings -> Trusted Publisher (GitHub Actions, repo
