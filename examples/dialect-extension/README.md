@@ -35,10 +35,7 @@ export default grammar(base, {
 });
 ```
 
-The key trick is the `($, original)` parameter that tree-sitter's
-`grammar(base, …)` form passes to each overridden rule: `original` is the
-base grammar's version of that rule. We use `choice(original, …new)` to
-**add** alternatives without dropping any existing ones.
+The key trick is the `($, original)` parameter that tree-sitter's `grammar(base, …)` form passes to each overridden rule: `original` is the base grammar's version of that rule. We use `choice(original, …new)` to **add** alternatives without dropping any existing ones.
 
 ## Running it
 

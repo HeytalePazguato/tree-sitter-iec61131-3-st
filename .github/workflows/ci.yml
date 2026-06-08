@@ -22,8 +22,8 @@ jobs:
     name: grammar (corpus + examples + benchmark)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
@@ -92,11 +92,33 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with: { node-version: "22" }
       - run: npm install
       - run: npm test
+
+  # Builds the grammar to WebAssembly and loads it through the web-tree-sitter
+  # runtime, exercising the WASM path that downstream consumers use to avoid the
+  # native node-tree-sitter build (which fails on Node 24 / Electron without
+  # prebuilds). --ignore-scripts skips the native gyp build we don't need here.
+  wasm:
+    name: wasm (web-tree-sitter smoke)
+    needs: grammar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: "22" }
+      - uses: mymindstorm/setup-emsdk@v16
+      - name: Install tree-sitter-cli
+        run: npm install -g tree-sitter-cli
+      - name: Build WASM grammar
+        run: tree-sitter build --wasm -o tree-sitter-iec61131_3_st.wasm .
+      - name: Install web-tree-sitter
+        run: npm install --ignore-scripts
+      - name: Parse every example via web-tree-sitter
+        run: node scripts/wasm-smoke.mjs
 
   rust:
     name: rust (${{ matrix.os }})
@@ -107,7 +129,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --all-features
@@ -121,7 +143,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with: { python-version: "3.11", cache: "pip" }
       - run: python -m pip install --upgrade pip build
@@ -137,9 +159,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-go@v5
-        with: { go-version: "1.22.x" }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with: { go-version: "1.23.x" }
       - run: go test ./bindings/go/...
 
   csharp:
@@ -151,7 +173,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v5
         with: { dotnet-version: "8.x" }
 
