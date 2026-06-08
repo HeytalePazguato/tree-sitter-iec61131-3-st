@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - npm releases now publish via **OIDC Trusted Publishing** instead of a long-lived `NPM_TOKEN` (npm bumped to latest in CI for OIDC; the npm preflight check was dropped). Requires a one-time trusted-publisher setup on npmjs.com for this repo + `release.yml`; the `NPM_TOKEN` secret is no longer used and can be removed.
+- Bumped pinned GitHub Actions to current majors: `actions/checkout` v4/v5 → v6, `actions/setup-node` v5 → v6, `actions/setup-go` v5 → v6, `actions/deploy-pages` v4 → v5, `actions/upload-pages-artifact` v3 → v5.
 
 ## [0.1.0] - 2026-05-15
 

@@ -81,12 +81,12 @@ jobs:
       tag:        ${{ steps.ver.outputs.tag }}
       tag_existed: ${{ steps.guard.outputs.exists }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
@@ -154,11 +154,11 @@ jobs:
       github.event.inputs.only == 'npm'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
           # registry-url makes setup-node write ~/.npmrc that wires
@@ -208,7 +208,7 @@ jobs:
       github.event.inputs.only == 'crates'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
@@ -263,7 +263,7 @@ jobs:
       github.event.inputs.only == 'pypi'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
@@ -332,7 +332,7 @@ jobs:
       github.event.inputs.only == 'nuget'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
