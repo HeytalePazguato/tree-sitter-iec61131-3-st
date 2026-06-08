@@ -6,25 +6,18 @@ description: "tree-sitter grammar for IEC 61131-3 Structured Text — standard, 
 
 # tree-sitter-iec61131-3-st
 
-A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the
-IEC 61131-3 (3rd edition, 2013) **Structured Text** language. Standard-compliant
-first; vendor dialects (Beckhoff TwinCAT, Codesys, B&R, Siemens, Rockwell)
-live in separate dialect grammars that extend this base.
+A [tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for the IEC 61131-3 (3rd edition, 2013) **Structured Text** language. Standard-compliant first; vendor dialects (Beckhoff TwinCAT, Codesys, B&R, Siemens, Rockwell) live in separate dialect grammars that extend this base.
 
-[View on GitHub](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st){: .btn }
-[Latest release](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/releases/latest){: .btn }
+[View on GitHub](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st){: .btn } [Latest release](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/releases/latest){: .btn }
 
 ## Highlights
 
-- Full IEC 61131-3 ST coverage: POUs, all VAR blocks, every type, every
-  operator with correct precedence, all statements, OOP, namespaces.
+- Full IEC 61131-3 ST coverage: POUs, all VAR blocks, every type, every operator with correct precedence, all statements, OOP, namespaces.
 - Case-insensitive keywords; identifiers preserve case.
 - Error-tolerant parser — useful trees on partial / broken input.
-- Six editor query files (highlights / locals / tags / folds / indents /
-  injections) using the standard tree-sitter capture vocabulary.
+- Six editor query files (highlights / locals / tags / folds / indents / injections) using the standard tree-sitter capture vocabulary.
 - Bindings for Node, Rust, Python, and Go.
-- Designed for vendor-dialect extension via `grammar(base, {…})` — see
-  [EXTENDING](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/blob/main/EXTENDING.md).
+- Designed for vendor-dialect extension via `grammar(base, {…})` — see [EXTENDING](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/blob/main/EXTENDING.md).
 
 ## Install
 

@@ -1,13 +1,6 @@
 # tree-sitter-iec61131-3-st
 
-[![ci](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml/badge.svg)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml)
-[![release](https://img.shields.io/github/v/release/HeytalePazguato/tree-sitter-iec61131-3-st?display_name=tag&sort=semver)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/releases)
-[![npm](https://img.shields.io/npm/v/tree-sitter-iec61131-3-st?label=npm&logo=npm)](https://www.npmjs.com/package/tree-sitter-iec61131-3-st)
-[![crates.io](https://img.shields.io/crates/v/tree-sitter-iec61131-3-st?logo=rust)](https://crates.io/crates/tree-sitter-iec61131-3-st)
-[![PyPI](https://img.shields.io/pypi/v/tree-sitter-iec61131-3-st?logo=pypi&logoColor=white)](https://pypi.org/project/tree-sitter-iec61131-3-st/)
-[![license](https://img.shields.io/github/license/HeytalePazguato/tree-sitter-iec61131-3-st)](LICENSE)
-[![tree-sitter](https://img.shields.io/badge/tree--sitter-0.26%2B-7c3aed)](https://tree-sitter.github.io/tree-sitter/)
-[![IEC 61131-3](https://img.shields.io/badge/IEC%2061131--3-Structured%20Text-005f87)](https://en.wikipedia.org/wiki/IEC_61131-3)
+[![ci](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml/badge.svg)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/actions/workflows/ci.yml) [![release](https://img.shields.io/github/v/release/HeytalePazguato/tree-sitter-iec61131-3-st?display_name=tag&sort=semver)](https://github.com/HeytalePazguato/tree-sitter-iec61131-3-st/releases) [![npm](https://img.shields.io/npm/v/tree-sitter-iec61131-3-st?label=npm&logo=npm)](https://www.npmjs.com/package/tree-sitter-iec61131-3-st) [![crates.io](https://img.shields.io/crates/v/tree-sitter-iec61131-3-st?logo=rust)](https://crates.io/crates/tree-sitter-iec61131-3-st) [![PyPI](https://img.shields.io/pypi/v/tree-sitter-iec61131-3-st?logo=pypi&logoColor=white)](https://pypi.org/project/tree-sitter-iec61131-3-st/) [![license](https://img.shields.io/github/license/HeytalePazguato/tree-sitter-iec61131-3-st)](LICENSE) [![tree-sitter](https://img.shields.io/badge/tree--sitter-0.26%2B-7c3aed)](https://tree-sitter.github.io/tree-sitter/) [![IEC 61131-3](https://img.shields.io/badge/IEC%2061131--3-Structured%20Text-005f87)](https://en.wikipedia.org/wiki/IEC_61131-3)
 
 A [tree-sitter] grammar for [IEC 61131-3][iec61131] **Structured Text** (ST) — the standard programming language for industrial PLCs. Standard-compliant first; vendor dialects (Beckhoff TwinCAT, Codesys, B&R Automation Studio, Siemens TIA, Rockwell) are deferred to separate dialect grammars that extend this base.
 
@@ -17,21 +10,11 @@ A [tree-sitter] grammar for [IEC 61131-3][iec61131] **Structured Text** (ST) —
 
 ## Features
 
-- IEC 61131-3 (3rd edition, 2013) Structured Text — POUs, all VAR blocks,
-  every elementary / derived / generic type, every operator with correct
-  precedence, every statement, full OOP (METHOD / PROPERTY / EXTENDS /
-  IMPLEMENTS / INTERFACE), namespaces, configuration / resource / task.
-- **Case-insensitive keywords** (`IF`, `if`, `If` all parse as the same
-  keyword) implemented at the lexer level.
-- **Error-tolerant**: produces a useful tree even on partial or broken input
-  — usable in editors during typing.
-- **Dialect-extensible**: the base grammar exposes named hidden rules
-  (`_declaration`, `_statement`, `_expression`, `_type_specifier`,
-  `_var_block`) so dialect grammars can add vendor-specific constructs via
-  `grammar(base, {…})` without forking. See [EXTENDING.md](EXTENDING.md).
-- **Editor-ready** queries: `highlights.scm`, `locals.scm`, `tags.scm`,
-  `folds.scm`, `indents.scm`, `injections.scm`. Standard tree-sitter
-  capture vocabulary.
+- IEC 61131-3 (3rd edition, 2013) Structured Text — POUs, all VAR blocks, every elementary / derived / generic type, every operator with correct precedence, every statement, full OOP (METHOD / PROPERTY / EXTENDS / IMPLEMENTS / INTERFACE), namespaces, configuration / resource / task.
+- **Case-insensitive keywords** (`IF`, `if`, `If` all parse as the same keyword) implemented at the lexer level.
+- **Error-tolerant**: produces a useful tree even on partial or broken input — usable in editors during typing.
+- **Dialect-extensible**: the base grammar exposes named hidden rules (`_declaration`, `_statement`, `_expression`, `_type_specifier`, `_var_block`) so dialect grammars can add vendor-specific constructs via `grammar(base, {…})` without forking. See [EXTENDING.md](EXTENDING.md).
+- **Editor-ready** queries: `highlights.scm`, `locals.scm`, `tags.scm`, `folds.scm`, `indents.scm`, `injections.scm`. Standard tree-sitter capture vocabulary.
 - Bindings for **Node, Rust, Python, Go**.
 
 ## Quick demo
@@ -56,9 +39,7 @@ prev_error := error;
 END_FUNCTION_BLOCK
 ```
 
-Parsing this with `tree-sitter parse` produces a clean tree with
-`function_block_declaration` → `var_input` / `var_output` / `var_block`
-→ assignments with `binary_expression` operands at the right precedence.
+Parsing this with `tree-sitter parse` produces a clean tree with `function_block_declaration` → `var_input` / `var_output` / `var_block` → assignments with `binary_expression` operands at the right precedence.
 
 ## Install
 
@@ -171,10 +152,7 @@ Out of scope for v0.0.1:
 
 ## Performance
 
-The CI benchmark parses a synthetic ~10 000-line ST file (200× the
-combined PID + conveyor + state-machine examples) and fails the build if
-the parse exceeds **200 ms** on a `ubuntu-latest` runner. Typical run is
-well under that.
+The CI benchmark parses a synthetic ~10 000-line ST file (200× the combined PID + conveyor + state-machine examples) and fails the build if the parse exceeds **200 ms** on a `ubuntu-latest` runner. Typical run is well under that.
 
 ## Development
 
@@ -192,42 +170,27 @@ tree-sitter test
 tree-sitter parse examples/blink.st
 ```
 
-See the project's [BLUEPRINT.md](BLUEPRINT.md) for branch / release
-conventions: `develop → release/<version> → main`, semver from a single
-`VERSION` file.
+See the project's [BLUEPRINT.md](BLUEPRINT.md) for branch / release conventions: `develop → release/<version> → main`, semver from a single `VERSION` file.
 
 ## Roadmap
 
 Future repos that will extend this base grammar:
 
-- `tree-sitter-iec61131-3-st-twincat` — Beckhoff TwinCAT 3 (TwinCAT-specific
-  pragmas, `S=` / `R=` set/reset, `OR_ELSE` / `AND_THEN` short-circuit
-  operators, conditional compilation, `ACTION` blocks).
-- `tree-sitter-iec61131-3-st-codesys` — Codesys 3 (attribute pragmas with
-  structured contents, action / transition blocks).
-- `tree-sitter-iec61131-3-st-br` — B&R Automation Studio (`ACTION`,
-  task-specific extensions).
+- `tree-sitter-iec61131-3-st-twincat` — Beckhoff TwinCAT 3 (TwinCAT-specific pragmas, `S=` / `R=` set/reset, `OR_ELSE` / `AND_THEN` short-circuit operators, conditional compilation, `ACTION` blocks).
+- `tree-sitter-iec61131-3-st-codesys` — Codesys 3 (attribute pragmas with structured contents, action / transition blocks).
+- `tree-sitter-iec61131-3-st-br` — B&R Automation Studio (`ACTION`, task-specific extensions).
 - `tree-sitter-iec61131-3-st-siemens` — Siemens TIA Portal SCL.
 - `tree-sitter-iec61131-3-st-rockwell` — Rockwell Studio 5000 ST.
 
-Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and
-[EXTENDING.md](EXTENDING.md).
+Pull requests welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and [EXTENDING.md](EXTENDING.md).
 
 ## Acknowledgments
 
-Patterns, organization, and corpus references from prior work in the
-ecosystem (all MIT or otherwise permissively licensed):
+Patterns, organization, and corpus references from prior work in the ecosystem (all MIT or otherwise permissively licensed):
 
-- [`tmatijevich/tree-sitter-structured-text`][prior1] — B&R-leaning
-  partial grammar; this project's literal regex shape and basic
-  precedence layout drew from it.
-- [`teunreyniers/tree-sitter-structured-text`][prior2] — generic ST
-  grammar; informed the named-precedence-table approach and VAR-block
-  factoring.
-- [`klauer/blark`][blark] — Lark-based TwinCAT parser; the most
-  comprehensive open-source IEC 61131-3 grammar. Used as a reference for
-  the rule organization, the OOP/extension surface, and which features
-  are truly TwinCAT-only vs. standard.
+- [`tmatijevich/tree-sitter-structured-text`][prior1] — B&R-leaning partial grammar; this project's literal regex shape and basic precedence layout drew from it.
+- [`teunreyniers/tree-sitter-structured-text`][prior2] — generic ST grammar; informed the named-precedence-table approach and VAR-block factoring.
+- [`klauer/blark`][blark] — Lark-based TwinCAT parser; the most comprehensive open-source IEC 61131-3 grammar. Used as a reference for the rule organization, the OOP/extension surface, and which features are truly TwinCAT-only vs. standard.
 
 ## License
 
