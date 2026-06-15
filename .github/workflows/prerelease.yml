@@ -88,6 +88,14 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Tripwire: prereleases attach only the root 'standard' grammar's
+      # parser.c. Fail here if a dialect exists in .github/grammars.json so a
+      # dialect can't be prereleased before this job is fanned out. The
+      # develop dev-build job above is intentionally NOT guarded, so adding a
+      # dialect entry for CI doesn't block routine develop pushes.
+      - name: Guard — single-grammar publish pipeline
+        uses: ./.github/actions/guard-single-grammar
+
       - uses: actions/setup-node@v6
         with: { node-version: "22" }
 

@@ -86,6 +86,13 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Tripwire: this workflow publishes only the root 'standard' grammar.
+      # If a dialect has been added to .github/grammars.json, fail here BEFORE
+      # tagging or publishing, so the gap can never be shipped by forgetting.
+      # See the MULTI-GRAMMAR scaffold comment below for what to implement.
+      - name: Guard — single-grammar publish pipeline
+        uses: ./.github/actions/guard-single-grammar
+
       - uses: actions/setup-node@v6
         with: { node-version: "22" }
 
@@ -142,6 +149,34 @@ jobs:
           generate_release_notes: true
           files: |
             src/parser.c
+
+  # ═══════════════════════════════════════════════════════════════════════
+  # MULTI-GRAMMAR / DIALECTS — how to fan this workflow out (not yet done)
+  #
+  # Today every publish job below operates on the root 'standard' grammar:
+  # it checks out the tag and runs from the repo root, where the single set
+  # of package manifests lives (package.json, Cargo.toml, pyproject.toml,
+  # the C# csproj). The `guard-single-grammar` step in `prepare` hard-fails
+  # the release if .github/grammars.json ever gains a second grammar, so the
+  # work below cannot be skipped by accident.
+  #
+  # To support dialects (grammars/<name>/ as self-contained, correctly-named
+  # packages):
+  #   1. Decide the VERSIONING MODEL — the one open design choice:
+  #        a) lockstep  — one root VERSION + one tag v<x>; every grammar
+  #           publishes at that version. Simple; dialects re-release on every
+  #           base bump even when unchanged.
+  #        b) per-grammar — a VERSION file per grammar dir and per-grammar
+  #           tags (e.g. beckhoff-v0.1.0). Independent cadence; `prepare`
+  #           must compute/tag per grammar.
+  #   2. Drive a matrix off .github/grammars.json (same `discover` pattern as
+  #      ci.yml) and add `working-directory: <grammar.path>` to each publish
+  #      job so it builds and publishes that grammar's own package.
+  #   3. Replace the hardcoded single-grammar bits: the wasm filename in
+  #      publish-npm (`tree-sitter-iec61131_3_st.wasm`) and the lowercased id
+  #      + csproj path in publish-nuget must derive from the grammar.
+  #   4. Remove the guard step in `prepare` once the fan-out lands.
+  # ═══════════════════════════════════════════════════════════════════════
 
   # ───────────────────────────────────────────────────────────────────────
   # npm publish
