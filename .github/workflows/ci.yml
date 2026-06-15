@@ -90,7 +90,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # Pin Windows to windows-2022: `npm install` builds the node-tree-sitter
+        # dev dependency with node-gyp 11.5.0, whose Visual Studio finder cannot
+        # classify the VS 18 that the windows-latest image now ships ("unknown
+        # version undefined"), so configure fails. windows-2022 still provides
+        # VS 2022, which node-gyp detects. Revisit when node-gyp adds VS 18
+        # support or the project drops the node-tree-sitter native build.
+        os: [ubuntu-latest, macos-latest, windows-2022]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
