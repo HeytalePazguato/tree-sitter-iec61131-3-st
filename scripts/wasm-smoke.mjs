@@ -7,13 +7,23 @@
 // guards the WASM path the native bindings' tests don't exercise.
 
 import { readFileSync, readdirSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Parser, Language } from "web-tree-sitter";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const wasmPath = join(root, "tree-sitter-iec61131_3_st.wasm");
-const examplesDir = join(root, "examples");
+// Grammar directory to smoke-test. Defaults to the repo root (the standard
+// grammar); pass a path (e.g. `grammars/beckhoff`) to test a dialect. The
+// built `*.wasm` and the `examples/` dir are both resolved inside it.
+const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+const grammarDir = process.argv[2] ? resolve(process.argv[2]) : repoRoot;
+const examplesDir = join(grammarDir, "examples");
+
+const wasmFile = readdirSync(grammarDir).find((f) => f.endsWith(".wasm"));
+if (!wasmFile) {
+  console.error(`No .wasm found in ${grammarDir}; run 'tree-sitter build --wasm' first.`);
+  process.exit(1);
+}
+const wasmPath = join(grammarDir, wasmFile);
 
 await Parser.init();
 const language = await Language.load(wasmPath);
