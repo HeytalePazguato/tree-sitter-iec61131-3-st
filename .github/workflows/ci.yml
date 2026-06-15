@@ -188,7 +188,7 @@ jobs:
       - name: Build native library (Windows)
         if: runner.os == 'Windows'
         run: |
-          cl /std:c11 /utf-8 /LD /I src src/parser.c /Fe:tree-sitter-iec61131-3-st.dll
+          cl /std:c11 /utf-8 /LD /I src src/parser.c src/scanner.c /Fe:tree-sitter-iec61131-3-st.dll
         shell: cmd
 
       - name: Run C# tests (Unix)
