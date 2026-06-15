@@ -1771,15 +1771,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[sS][tT][rR][uU][cC][tT]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_struct"
           },
           "named": false,
           "value": "END_STRUCT"
@@ -1929,15 +1922,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -1985,15 +1971,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -2041,15 +2020,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -2097,15 +2069,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -2153,15 +2118,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -2209,15 +2167,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -2265,15 +2216,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -2309,15 +2253,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -2353,15 +2290,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[vV][aA][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_var"
           },
           "named": false,
           "value": "END_VAR"
@@ -3806,15 +3736,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[iI][fF]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_if"
           },
           "named": false,
           "value": "END_IF"
@@ -3984,15 +3907,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[cC][aA][sS][eE]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_case"
           },
           "named": false,
           "value": "END_CASE"
@@ -4197,15 +4113,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[fF][oO][rR]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_for"
           },
           "named": false,
           "value": "END_FOR"
@@ -4274,15 +4183,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[wW][hH][iI][lL][eE]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_while"
           },
           "named": false,
           "value": "END_WHILE"
@@ -4351,15 +4253,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[rR][eE][pP][eE][aA][tT]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_repeat"
           },
           "named": false,
           "value": "END_REPEAT"
@@ -4547,15 +4442,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[pP][rR][oO][gG][rR][aA][mM]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_program"
           },
           "named": false,
           "value": "END_PROGRAM"
@@ -4627,15 +4515,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[fF][uU][nN][cC][tT][iI][oO][nN]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_function"
           },
           "named": false,
           "value": "END_FUNCTION"
@@ -4809,15 +4690,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[fF][uU][nN][cC][tT][iI][oO][nN]_[bB][lL][oO][cC][kK]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_function_block"
           },
           "named": false,
           "value": "END_FUNCTION_BLOCK"
@@ -4976,15 +4850,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[iI][nN][tT][eE][rR][fF][aA][cC][eE]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_interface"
           },
           "named": false,
           "value": "END_INTERFACE"
@@ -5065,15 +4932,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[mM][eE][tT][hH][oO][dD]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_method"
           },
           "named": false,
           "value": "END_METHOD"
@@ -5141,15 +5001,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[pP][rR][oO][pP][eE][rR][tT][yY]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_property"
           },
           "named": false,
           "value": "END_PROPERTY"
@@ -5258,15 +5111,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[mM][eE][tT][hH][oO][dD]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_method"
           },
           "named": false,
           "value": "END_METHOD"
@@ -5387,15 +5233,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[pP][rR][oO][pP][eE][rR][tT][yY]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_property"
           },
           "named": false,
           "value": "END_PROPERTY"
@@ -5471,15 +5310,8 @@
             {
               "type": "ALIAS",
               "content": {
-                "type": "TOKEN",
-                "content": {
-                  "type": "PREC",
-                  "value": 2,
-                  "content": {
-                    "type": "PATTERN",
-                    "value": "[eE][nN][dD]_[gG][eE][tT]"
-                  }
-                }
+                "type": "SYMBOL",
+                "name": "_end_get"
               },
               "named": false,
               "value": "END_GET"
@@ -5487,15 +5319,8 @@
             {
               "type": "ALIAS",
               "content": {
-                "type": "TOKEN",
-                "content": {
-                  "type": "PREC",
-                  "value": 2,
-                  "content": {
-                    "type": "PATTERN",
-                    "value": "[eE][nN][dD]_[sS][eE][tT]"
-                  }
-                }
+                "type": "SYMBOL",
+                "name": "_end_set"
               },
               "named": false,
               "value": "END_SET"
@@ -5602,15 +5427,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[tT][yY][pP][eE]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_type"
           },
           "named": false,
           "value": "END_TYPE"
@@ -5732,15 +5550,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[nN][aA][mM][eE][sS][pP][aA][cC][eE]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_namespace"
           },
           "named": false,
           "value": "END_NAMESPACE"
@@ -5849,15 +5660,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[cC][oO][nN][fF][iI][gG][uU][rR][aA][tT][iI][oO][nN]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_configuration"
           },
           "named": false,
           "value": "END_CONFIGURATION"
@@ -5939,15 +5743,8 @@
         {
           "type": "ALIAS",
           "content": {
-            "type": "TOKEN",
-            "content": {
-              "type": "PREC",
-              "value": 2,
-              "content": {
-                "type": "PATTERN",
-                "value": "[eE][nN][dD]_[rR][eE][sS][oO][uU][rR][cC][eE]"
-              }
-            }
+            "type": "SYMBOL",
+            "name": "_end_resource"
           },
           "named": false,
           "value": "END_RESOURCE"
@@ -6164,7 +5961,84 @@
     ]
   ],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "_end_if"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_case"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_for"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_while"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_repeat"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_var"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_struct"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_type"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_program"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_function"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_function_block"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_interface"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_method"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_property"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_get"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_set"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_namespace"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_configuration"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_end_resource"
+    }
+  ],
   "inline": [],
   "supertypes": [
     "_declaration",

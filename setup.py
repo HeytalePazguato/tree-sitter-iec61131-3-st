@@ -42,6 +42,9 @@ class EggInfo(egg_info):
         super().find_sources()
         self.filelist.recursive_include("queries", "*.scm")
         self.filelist.include("src/tree_sitter/*.h")
+        # Ship the external scanner in the sdist so source installs can link it
+        # (build_ext only appends it when present on disk).
+        self.filelist.include("src/scanner.c")
 
 
 setup(

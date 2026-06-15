@@ -48,6 +48,43 @@ export function kw(name) {
   return alias(token(prec(2, new RegExp(pattern))), name);
 }
 
+// Block/POU terminator keywords. These are reserved words recognized by the
+// external scanner (src/scanner.c) rather than by `kw()` so they are lexed in
+// every state, including error recovery. That lets tree-sitter keep the
+// enclosing block when an inner terminator is missing and localize the error,
+// instead of collapsing the whole POU into a single ERROR node. The order here
+// MUST match the `enum TokenType` in src/scanner.c.
+export const TERMINATORS = [
+  'END_IF',
+  'END_CASE',
+  'END_FOR',
+  'END_WHILE',
+  'END_REPEAT',
+  'END_VAR',
+  'END_STRUCT',
+  'END_TYPE',
+  'END_PROGRAM',
+  'END_FUNCTION',
+  'END_FUNCTION_BLOCK',
+  'END_INTERFACE',
+  'END_METHOD',
+  'END_PROPERTY',
+  'END_GET',
+  'END_SET',
+  'END_NAMESPACE',
+  'END_CONFIGURATION',
+  'END_RESOURCE',
+];
+
+/**
+ * Reference a reserved terminator keyword. Aliased to its canonical (upper-
+ * case) name so the syntax tree and editor queries see `END_IF` etc. exactly
+ * as they did when these were `kw()` tokens.
+ */
+function endkw($, name) {
+  return alias($[`_${name.toLowerCase()}`], name);
+}
+
 /** Comma-separated list of `rule`, optionally trailing-comma-tolerant. */
 function commaSep(rule) {
   return optional(commaSep1(rule));
@@ -90,6 +127,10 @@ export default grammar({
   word: ($) => $.identifier,
 
   extras: ($) => [/\s/, $.comment],
+
+  // Reserved block/POU terminator keywords, lexed by src/scanner.c. Order must
+  // match both the TERMINATORS list above and the enum in the scanner.
+  externals: ($) => TERMINATORS.map((name) => $[`_${name.toLowerCase()}`]),
 
   // Supertype rules let editor queries match the family without listing each
   // variant. Hidden rules (leading `_`) are only exposed via supertypes for
@@ -460,7 +501,7 @@ export default grammar({
 
     // 5.8 Structure type — §6.4.3.4
     structure_type_inline: ($) =>
-      seq(kw('STRUCT'), repeat1($.structure_field), kw('END_STRUCT')),
+      seq(kw('STRUCT'), repeat1($.structure_field), endkw($, 'END_STRUCT')),
 
     structure_field: ($) =>
       seq(
@@ -493,61 +534,61 @@ export default grammar({
         kw('VAR'),
         optional($.var_qualifier_list),
         repeat($._var_decl_line),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_input: ($) =>
       seq(
         kw('VAR_INPUT'),
         optional($.var_qualifier_list),
         repeat($._var_decl_line),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_output: ($) =>
       seq(
         kw('VAR_OUTPUT'),
         optional($.var_qualifier_list),
         repeat($._var_decl_line),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_in_out: ($) =>
       seq(
         kw('VAR_IN_OUT'),
         optional($.var_qualifier_list),
         repeat($._var_decl_line),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_temp: ($) =>
       seq(
         kw('VAR_TEMP'),
         optional($.var_qualifier_list),
         repeat($._var_decl_line),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_global: ($) =>
       seq(
         kw('VAR_GLOBAL'),
         optional($.var_qualifier_list),
         repeat($._var_decl_line),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_external: ($) =>
       seq(
         kw('VAR_EXTERNAL'),
         optional($.var_qualifier_list),
         repeat($._var_decl_line),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_access: ($) =>
       seq(
         kw('VAR_ACCESS'),
         repeat($.access_declaration),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
     var_config: ($) =>
       seq(
         kw('VAR_CONFIG'),
         repeat($.instance_specific_init),
-        kw('END_VAR'),
+        endkw($, 'END_VAR'),
       ),
 
     var_qualifier_list: ($) => repeat1($.var_qualifier),
@@ -789,7 +830,7 @@ export default grammar({
         field('consequence', optional($._statement_list)),
         repeat($.elsif_clause),
         optional($.else_clause),
-        kw('END_IF'),
+        endkw($, 'END_IF'),
       ),
 
     elsif_clause: ($) =>
@@ -811,7 +852,7 @@ export default grammar({
         kw('OF'),
         repeat1($.case_clause),
         optional($.else_clause),
-        kw('END_CASE'),
+        endkw($, 'END_CASE'),
       ),
 
     case_clause: ($) =>
@@ -839,7 +880,7 @@ export default grammar({
         optional(seq(kw('BY'), field('step', $._expression))),
         kw('DO'),
         field('body', optional($._statement_list)),
-        kw('END_FOR'),
+        endkw($, 'END_FOR'),
       ),
 
     // 8.4 WHILE
@@ -849,7 +890,7 @@ export default grammar({
         field('condition', $._expression),
         kw('DO'),
         field('body', optional($._statement_list)),
-        kw('END_WHILE'),
+        endkw($, 'END_WHILE'),
       ),
 
     // 8.5 REPEAT
@@ -859,7 +900,7 @@ export default grammar({
         field('body', optional($._statement_list)),
         kw('UNTIL'),
         field('condition', $._expression),
-        kw('END_REPEAT'),
+        endkw($, 'END_REPEAT'),
       ),
 
     exit_statement: ($) => seq(kw('EXIT'), ';'),
@@ -893,7 +934,7 @@ export default grammar({
         field('name', $.identifier),
         repeat($._var_block),
         field('body', optional($._statement_list)),
-        kw('END_PROGRAM'),
+        endkw($, 'END_PROGRAM'),
       ),
 
     // §6.7.1 — FUNCTION (with return type)
@@ -905,7 +946,7 @@ export default grammar({
         field('return_type', $._type_specifier),
         repeat($._var_block),
         field('body', optional($._statement_list)),
-        kw('END_FUNCTION'),
+        endkw($, 'END_FUNCTION'),
       ),
 
     // §6.7.3 — FUNCTION_BLOCK with optional EXTENDS / IMPLEMENTS / methods.
@@ -926,7 +967,7 @@ export default grammar({
         repeat($._var_block),
         repeat($._fb_member),
         field('body', optional($._statement_list)),
-        kw('END_FUNCTION_BLOCK'),
+        endkw($, 'END_FUNCTION_BLOCK'),
       ),
 
     _fb_modifier: ($) => choice(kw('ABSTRACT'), kw('FINAL')),
@@ -943,7 +984,7 @@ export default grammar({
         ),
         repeat($.method_signature),
         repeat($.property_signature),
-        kw('END_INTERFACE'),
+        endkw($, 'END_INTERFACE'),
       ),
 
     method_signature: ($) =>
@@ -955,7 +996,7 @@ export default grammar({
           seq(':', field('return_type', $._type_specifier)),
         ),
         repeat($._var_block),
-        kw('END_METHOD'),
+        endkw($, 'END_METHOD'),
       ),
 
     // Interface property — same shape as a class property accessor; the body
@@ -968,7 +1009,7 @@ export default grammar({
         ':',
         field('type', $._type_specifier),
         repeat($.property_accessor),
-        kw('END_PROPERTY'),
+        endkw($, 'END_PROPERTY'),
       ),
 
     // §6.7.3 (3rd ed addenda) — METHOD inside FUNCTION_BLOCK / CLASS
@@ -983,7 +1024,7 @@ export default grammar({
         ),
         repeat($._var_block),
         field('body', optional($._statement_list)),
-        kw('END_METHOD'),
+        endkw($, 'END_METHOD'),
       ),
 
     _method_modifier: ($) => choice(kw('ABSTRACT'), kw('FINAL'), kw('OVERRIDE')),
@@ -997,7 +1038,7 @@ export default grammar({
         ':',
         field('type', $._type_specifier),
         repeat1($.property_accessor),
-        kw('END_PROPERTY'),
+        endkw($, 'END_PROPERTY'),
       ),
 
     property_accessor: ($) =>
@@ -1005,7 +1046,7 @@ export default grammar({
         choice(kw('GET'), kw('SET')),
         repeat($._var_block),
         field('body', optional($._statement_list)),
-        choice(kw('END_GET'), kw('END_SET')),
+        choice(endkw($, 'END_GET'), endkw($, 'END_SET')),
       ),
 
     _access_modifier: ($) =>
@@ -1018,7 +1059,7 @@ export default grammar({
 
     // §6.7.5 — TYPE … END_TYPE
     type_declaration: ($) =>
-      seq(kw('TYPE'), repeat1($.type_definition), kw('END_TYPE')),
+      seq(kw('TYPE'), repeat1($.type_definition), endkw($, 'END_TYPE')),
 
     type_definition: ($) =>
       seq(
@@ -1036,7 +1077,7 @@ export default grammar({
         kw('NAMESPACE'),
         field('name', $._name),
         repeat($._top_level_item),
-        kw('END_NAMESPACE'),
+        endkw($, 'END_NAMESPACE'),
       ),
 
     using_directive: ($) =>
@@ -1049,7 +1090,7 @@ export default grammar({
         field('name', $.identifier),
         repeat($._var_block),
         repeat($.resource_declaration),
-        kw('END_CONFIGURATION'),
+        endkw($, 'END_CONFIGURATION'),
       ),
 
     resource_declaration: ($) =>
@@ -1061,7 +1102,7 @@ export default grammar({
         repeat($._var_block),
         repeat($.task_declaration),
         repeat($.program_assignment),
-        kw('END_RESOURCE'),
+        endkw($, 'END_RESOURCE'),
       ),
 
     task_declaration: ($) =>
