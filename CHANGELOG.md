@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased] — next: 0.1.2
 
+### Added
+
+- External scanner (`src/scanner.c`) that recognizes the 19 block and POU terminator keywords (`END_IF`, `END_CASE`, `END_FOR`, `END_WHILE`, `END_REPEAT`, `END_VAR`, `END_STRUCT`, `END_TYPE`, `END_PROGRAM`, `END_FUNCTION`, `END_FUNCTION_BLOCK`, `END_INTERFACE`, `END_METHOD`, `END_PROPERTY`, `END_GET`, `END_SET`, `END_NAMESPACE`, `END_CONFIGURATION`, `END_RESOURCE`) as reserved tokens. They were previously case-insensitive regex tokens built by the `kw()` helper, which tree-sitter cannot reserve. All language bindings already compile `src/scanner.c` when present, so no binding changes were required.
+
+### Fixed
+
+- Error recovery for a missing block terminator. A forgotten `END_IF` (or any `END_*`) used to collapse the entire enclosing POU into a single `ERROR` node, with the real terminator mis-lexed as an `identifier`, so a consuming tool could only report "something is wrong in this POU", not which block was left open. The terminators are now reserved keywords lexed in every state (including during recovery), so the parser keeps the enclosing `function_block_declaration` / `program_declaration` / etc. and localizes the fault. Statement blocks (`IF`, `CASE`, `FOR`, `WHILE`, `REPEAT`) now produce a precise `MISSING "END_*"` node at the unterminated block instead of a POU-wide error.
+
 ## [0.1.1] - 2026-06-08
 
 ### Added

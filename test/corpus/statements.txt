@@ -388,3 +388,31 @@ END_PROGRAM
           (identifier)
           (identifier))
         (argument_list)))))
+
+================================================================================
+Missing END_IF localizes to the IF (error recovery)
+================================================================================
+
+FUNCTION_BLOCK FB_Test
+VAR x : INT; END_VAR
+IF x > 0 THEN
+  x := 1;
+END_FUNCTION_BLOCK
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (function_block_declaration
+    (identifier)
+    (var_block
+      (variable_declaration
+        (identifier)
+        (elementary_type)))
+    (if_statement
+      (binary_expression
+        (identifier)
+        (integer_literal))
+      (assignment_statement
+        (identifier)
+        (integer_literal))
+      (MISSING "END_IF"))))
