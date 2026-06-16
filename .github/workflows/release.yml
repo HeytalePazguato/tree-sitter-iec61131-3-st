@@ -153,29 +153,36 @@ jobs:
   # ═══════════════════════════════════════════════════════════════════════
   # MULTI-GRAMMAR / DIALECTS — how to fan this workflow out (not yet done)
   #
-  # Today every publish job below operates on the root 'standard' grammar:
-  # it checks out the tag and runs from the repo root, where the single set
-  # of package manifests lives (package.json, Cargo.toml, pyproject.toml,
-  # the C# csproj). The `guard-single-grammar` step in `prepare` hard-fails
-  # the release if .github/grammars.json ever gains a second grammar, so the
-  # work below cannot be skipped by accident.
+  # Target model: INDEPENDENT per-grammar releases. A bug in one dialect must
+  # be shippable on its own, without re-releasing the others. The
+  # `guard-single-grammar` step in `prepare` is only a "not built yet" stop —
+  # it hard-fails a release while a dialect exists but the pipeline below still
+  # assumes one grammar. It does NOT impose lockstep; remove it once the
+  # fan-out lands.
   #
-  # To support dialects (grammars/<name>/ as self-contained, correctly-named
-  # packages):
-  #   1. Decide the VERSIONING MODEL — the one open design choice:
-  #        a) lockstep  — one root VERSION + one tag v<x>; every grammar
-  #           publishes at that version. Simple; dialects re-release on every
-  #           base bump even when unchanged.
-  #        b) per-grammar — a VERSION file per grammar dir and per-grammar
-  #           tags (e.g. beckhoff-v0.1.0). Independent cadence; `prepare`
-  #           must compute/tag per grammar.
-  #   2. Drive a matrix off .github/grammars.json (same `discover` pattern as
-  #      ci.yml) and add `working-directory: <grammar.path>` to each publish
-  #      job so it builds and publishes that grammar's own package.
-  #   3. Replace the hardcoded single-grammar bits: the wasm filename in
-  #      publish-npm (`tree-sitter-iec61131_3_st.wasm`) and the lowercased id
-  #      + csproj path in publish-nuget must derive from the grammar.
-  #   4. Remove the guard step in `prepare` once the fan-out lands.
+  # Today every publish job operates on the root 'standard' grammar from the
+  # repo root, where the single set of manifests lives (package.json,
+  # Cargo.toml, pyproject.toml, the C# csproj). To support independent dialect
+  # releases (grammars/<name>/ as self-contained, correctly-named packages):
+  #
+  #   1. Per-grammar version + tag namespace:
+  #        - standard keeps its root VERSION and `v<x>` tags (unchanged).
+  #        - each dialect gets grammars/<name>/VERSION and `<name>-v<x>` tags
+  #          (e.g. beckhoff-v0.1.0).
+  #   2. Matrix `prepare` + every publish job over .github/grammars.json (the
+  #      same `discover` pattern as ci.yml), with
+  #      `working-directory: <grammar.path>`, each job reading ITS grammar's
+  #      VERSION and publishing ITS package.
+  #   3. Independent cadence is FREE from the per-version idempotence guards
+  #      already in each publish job: they skip when the version is already on
+  #      the registry. So on a push to main only the grammar(s) whose VERSION
+  #      you bumped get a new tag + publish. Bump grammars/beckhoff/VERSION
+  #      only → only beckhoff releases; standard and br are skipped. Never all
+  #      at once.
+  #   4. Replace the remaining hardcoded single-grammar bits: the wasm filename
+  #      in publish-npm (`tree-sitter-iec61131_3_st.wasm`) and the lowercased
+  #      id + csproj path in publish-nuget must derive from the grammar.
+  #   5. Remove the guard step in `prepare` once the fan-out lands.
   # ═══════════════════════════════════════════════════════════════════════
 
   # ───────────────────────────────────────────────────────────────────────

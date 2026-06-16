@@ -4,9 +4,13 @@ description: >-
   'standard' grammar. The publish workflows (release.yml, prerelease.yml) only
   build and publish the root grammar; this tripwire makes it impossible to cut
   a release or prerelease for a repo that contains a dialect until those
-  workflows have been fanned out over grammars.json. It deliberately runs only
-  on the release-cutting paths, not on day-to-day develop pushes, so adding a
-  dialect entry to grammars.json for CI does not get blocked during development.
+  workflows have been fanned out over grammars.json. This is a "not built yet"
+  stop, NOT a lockstep mandate: the target model is independent per-grammar
+  releases (per-grammar VERSION + `<name>-v<x>` tags + the existing per-version
+  idempotence guards, so bumping one grammar's VERSION releases only that
+  grammar). It deliberately runs only on the release-cutting paths, not on
+  day-to-day develop pushes, so adding a dialect entry to grammars.json for CI
+  does not get blocked during development.
 runs:
   using: composite
   steps:
@@ -19,7 +23,7 @@ runs:
         if [[ "$count" -ne 1 || "$nonroot" -ne 0 ]]; then
           names=$(jq -r '[.[].name] | join(", ")' "$f")
           echo "::error::The release/prerelease publish pipeline only handles the root 'standard' grammar, but .github/grammars.json defines $count grammar(s): $names."
-          echo "::error::Before releasing a dialect: (1) give each grammar directory self-contained, correctly-named package manifests; (2) fan out the publish jobs in release.yml and prerelease.yml over .github/grammars.json; (3) decide the versioning model (shared VERSION+tag vs per-grammar VERSION+tag). See the 'MULTI-GRAMMAR' scaffold comment in release.yml."
+          echo "::error::Before releasing a dialect: (1) give each grammar directory self-contained, correctly-named package manifests; (2) fan out the publish jobs in release.yml and prerelease.yml over .github/grammars.json with per-grammar VERSION files and '<name>-v<x>' tags; the existing per-version idempotence guards then make releases independent (bump one grammar's VERSION → only that grammar publishes). See the 'MULTI-GRAMMAR' scaffold comment in release.yml."
           exit 1
         fi
         echo "Single-grammar publish pipeline OK (.github/grammars.json has exactly the root grammar)."
