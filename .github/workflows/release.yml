@@ -81,7 +81,7 @@ jobs:
       tag:        ${{ steps.ver.outputs.tag }}
       tag_existed: ${{ steps.guard.outputs.exists }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -196,7 +196,7 @@ jobs:
       github.event.inputs.only == 'npm'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
@@ -266,7 +266,7 @@ jobs:
       github.event.inputs.only == 'crates'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
@@ -321,7 +321,7 @@ jobs:
       github.event.inputs.only == 'pypi'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
@@ -390,7 +390,7 @@ jobs:
       github.event.inputs.only == 'nuget'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 

@@ -32,7 +32,7 @@ jobs:
     outputs:
       grammars: ${{ steps.set.outputs.grammars }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - id: set
         shell: bash
         run: echo "grammars=$(jq -c . .github/grammars.json)" >> "$GITHUB_OUTPUT"
@@ -50,7 +50,7 @@ jobs:
       matrix:
         grammar: ${{ fromJSON(needs.discover.outputs.grammars) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with: { node-version: "22" }
 
@@ -128,7 +128,7 @@ jobs:
         # windows-latest now ships. windows-2022 still provides VS 2022.
         os: [ubuntu-latest, macos-latest, windows-2022]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with: { node-version: "22" }
       - run: npm install
@@ -146,7 +146,7 @@ jobs:
         grammar: ${{ fromJSON(needs.discover.outputs.grammars) }}
         os: [ubuntu-latest, macos-latest, windows-2022]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
@@ -164,7 +164,7 @@ jobs:
         grammar: ${{ fromJSON(needs.discover.outputs.grammars) }}
         os: [ubuntu-latest, macos-latest, windows-2022]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v6
         with: { python-version: "3.11", cache: "pip" }
       - run: python -m pip install --upgrade pip build
@@ -183,7 +183,7 @@ jobs:
         grammar: ${{ fromJSON(needs.discover.outputs.grammars) }}
         os: [ubuntu-latest, macos-latest, windows-2022]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-go@v6
         with: { go-version: "1.23.x" }
       - run: go test ./bindings/go/...
@@ -199,7 +199,7 @@ jobs:
         grammar: ${{ fromJSON(needs.discover.outputs.grammars) }}
         os: [ubuntu-latest, macos-latest, windows-2022]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-dotnet@v5
         with: { dotnet-version: "8.x" }
 
@@ -248,7 +248,7 @@ jobs:
       matrix:
         grammar: ${{ fromJSON(needs.discover.outputs.grammars) }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with: { node-version: "22" }
       - uses: mymindstorm/setup-emsdk@v16
