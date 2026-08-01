@@ -38,7 +38,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
@@ -96,7 +96,7 @@ jobs:
       - name: Guard — single-grammar publish pipeline
         uses: ./.github/actions/guard-single-grammar
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli

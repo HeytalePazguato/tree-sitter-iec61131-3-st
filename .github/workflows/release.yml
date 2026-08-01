@@ -93,7 +93,7 @@ jobs:
       - name: Guard — single-grammar publish pipeline
         uses: ./.github/actions/guard-single-grammar
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
@@ -200,7 +200,7 @@ jobs:
         with:
           ref: ${{ needs.prepare.outputs.tag }}
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
           # registry-url makes setup-node write ~/.npmrc that wires
