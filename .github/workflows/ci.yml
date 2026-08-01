@@ -184,7 +184,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-2022]
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with: { go-version: "1.23.x" }
       - run: go test ./bindings/go/...
         working-directory: ${{ matrix.grammar.path }}
