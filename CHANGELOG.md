@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased] — next: 0.1.3
 
+### Fixed
+
+- `EXTENDING.md` now imports the grammar as `tree-sitter-iec61131-3-st/grammar.js`. The package has no `exports` map, so the bare `/grammar` form fails with `ERR_MODULE_NOT_FOUND`.
+- `EXTENDING.md` gained an "External scanner" section. A dialect must copy `src/scanner.c` into its own `src/` and rename the five `tree_sitter_iec61131_3_st_external_scanner_*` symbols to its own prefix.
+
 ## [0.1.2] - 2026-06-15
 
 ### Added

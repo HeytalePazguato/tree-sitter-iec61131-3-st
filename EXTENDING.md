@@ -46,7 +46,9 @@ The base grammar also exposes these as **supertypes** so editor queries can matc
 
 A dialect grammar overrides any of these hidden rules to inject vendor-specific alternatives, while delegating to `original` for everything the standard already covers.
 
-The base grammar also exports a `kw(name)` helper for building case-insensitive keyword tokens — dialects can `import { kw } from 'tree-sitter-iec61131-3-st/grammar'` to reuse the same keyword-token machinery.
+The base grammar also exports a `kw(name)` helper for building case-insensitive keyword tokens — dialects can `import { kw } from 'tree-sitter-iec61131-3-st/grammar.js'` to reuse the same keyword-token machinery.
+
+Import the grammar with the explicit file name `tree-sitter-iec61131-3-st/grammar.js`, not `tree-sitter-iec61131-3-st/grammar`. The package has no `exports` map, so ESM resolution needs the full file name; the bare `/grammar` form fails with `ERR_MODULE_NOT_FOUND`.
 
 ---
 
@@ -66,7 +68,7 @@ npm install tree-sitter-iec61131-3-st
 ### `grammar.js`
 
 ```js
-import base, { kw } from 'tree-sitter-iec61131-3-st/grammar';
+import base, { kw } from 'tree-sitter-iec61131-3-st/grammar.js';
 
 export default grammar(base, {
   name: 'iec61131_3_st_twincat',
@@ -138,7 +140,7 @@ You should see a `twincat_system_call` node inside the assignment's right-hand s
 If your vendor extension requires a new reserved word that must lex as a keyword (not as an identifier), use the `kw(name)` helper exported by the base grammar:
 
 ```js
-import base, { kw } from 'tree-sitter-iec61131-3-st/grammar';
+import base, { kw } from 'tree-sitter-iec61131-3-st/grammar.js';
 
 export default grammar(base, {
   // ...
@@ -174,7 +176,21 @@ Copy that directory to a new repo, run `npm install tree-sitter-iec61131-3-st` (
 
 ---
 
-## 5. Reporting issues with extension points
+## 5. External scanner
+
+The base grammar declares `externals` for the `END_*` block terminators (`END_IF`, `END_CASE`, `END_FUNCTION_BLOCK`, and the rest), which are recognized by `src/scanner.c` rather than by a regex token. Tree-sitter compiles the scanner only from the grammar's own `src/` directory, so a dialect cannot import it from the base package.
+
+A dialect must therefore copy `src/scanner.c` from the base repo into its own `src/` and rename the five exported symbols from the base prefix `tree_sitter_iec61131_3_st_external_scanner_` to `tree_sitter_<dialect_name>_external_scanner_`, where `<dialect_name>` is the grammar's `name` (for example `iec61131_3_st_twincat`):
+
+- `tree_sitter_iec61131_3_st_external_scanner_create`
+- `tree_sitter_iec61131_3_st_external_scanner_destroy`
+- `tree_sitter_iec61131_3_st_external_scanner_scan`
+- `tree_sitter_iec61131_3_st_external_scanner_serialize`
+- `tree_sitter_iec61131_3_st_external_scanner_deserialize`
+
+Keep the rest of the file byte-identical to the base copy so that a base upgrade that changes the scanner is easy to spot in a diff.
+
+## 6. Reporting issues with extension points
 
 If a feature you need to model in your dialect cannot be cleanly added through the existing extension points, open an issue against this repo describing:
 
