@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - `EXTENDING.md` now imports the grammar as `tree-sitter-iec61131-3-st/grammar.js`. The package has no `exports` map, so the bare `/grammar` form fails with `ERR_MODULE_NOT_FOUND`.
 - `EXTENDING.md` gained an "External scanner" section. A dialect must copy `src/scanner.c` into its own `src/` and rename the five `tree_sitter_iec61131_3_st_external_scanner_*` symbols to its own prefix.
+- CI, prerelease and release workflows pin `tree-sitter-cli@0.26.9`, the version that generated the committed parser. Installing the latest CLI (0.27.x) regenerated a different `src/` and failed the stale-parser check on every push.
 
 ## [0.1.2] - 2026-06-15
 

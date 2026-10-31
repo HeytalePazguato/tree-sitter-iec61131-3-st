@@ -42,7 +42,7 @@ jobs:
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
-        run: npm install -g tree-sitter-cli
+        run: npm install -g tree-sitter-cli@0.26.9
 
       - name: Compute dev version
         id: ver
@@ -100,7 +100,7 @@ jobs:
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
-        run: npm install -g tree-sitter-cli
+        run: npm install -g tree-sitter-cli@0.26.9
 
       - name: Compute prerelease tag
         id: tag

@@ -55,7 +55,7 @@ jobs:
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
-        run: npm install -g tree-sitter-cli
+        run: npm install -g tree-sitter-cli@0.26.9
 
       - name: Verify generated parser is up to date
         working-directory: ${{ matrix.grammar.path }}
@@ -253,7 +253,7 @@ jobs:
         with: { node-version: "22" }
       - uses: mymindstorm/setup-emsdk@v16
       - name: Install tree-sitter-cli
-        run: npm install -g tree-sitter-cli
+        run: npm install -g tree-sitter-cli@0.26.9
       - name: Build WASM grammar
         working-directory: ${{ matrix.grammar.path }}
         run: tree-sitter build --wasm -o grammar.wasm .

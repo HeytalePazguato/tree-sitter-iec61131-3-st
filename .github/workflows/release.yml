@@ -97,7 +97,7 @@ jobs:
         with: { node-version: "22" }
 
       - name: Install tree-sitter-cli
-        run: npm install -g tree-sitter-cli
+        run: npm install -g tree-sitter-cli@0.26.9
 
       - name: Read VERSION
         id: ver
@@ -239,7 +239,7 @@ jobs:
 
       - name: Install tree-sitter-cli
         if: steps.published.outputs.skip == 'false'
-        run: npm install -g tree-sitter-cli
+        run: npm install -g tree-sitter-cli@0.26.9
 
       - name: Build WASM grammar
         if: steps.published.outputs.skip == 'false'
